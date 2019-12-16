@@ -1,0 +1,18 @@
+{
+  "title" : "青山歌",
+  "description" : "记录我的编程思想和实践",
+  "language" : "zh-hans",
+  "plugins":[
+    "expandable-chapters",
+    "back-to-top-button",
+    "-lunr",
+    "-search",
+    "search-pro",
+    "github"
+  ],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/followWinter"
+    }
+  }
+}

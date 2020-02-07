@@ -1,8 +1,9 @@
+[原文地址](https://jaredpalmer.com/formik)
 ### 状态提升
 
-通常，多个组件需要反映相同的改变数据。我们推荐提升共享的状态到他们最近的组件。看看这是这么做到的把。
+通常，多个组件需要反映相同的改变数据。我们推荐提升共享的状态到他们最近的组件。看看这是怎么做到的把。
 
-在这个章节，我们将创建一个温度计算器，计算水是否在某个给定稳定沸腾。
+在这个章节，我们将创建一个温度计算器，计算水是否在某个给定温度沸腾。
 
 我们将从一个叫做`BoilingVerdict`的组件开始。它接受`celisus`温度作为属性，打印水是否足够沸腾：
 ```jsx harmony
@@ -46,7 +47,7 @@ class Calculator extends React.Component {
   }
 }
 ```
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/ZXeOBm?editors=0010)
 
 ### 添加第二个输入
 
@@ -99,7 +100,7 @@ class Calculator extends React.Component {
 }
 ```
 
-[在 CodePen 尝试它]
+[在 CodePen 尝试它](https://codepen.io/gaearon/pen/jGBryx?editors=0010)
 
 我们现在有两个输入框，但是当你输入温度到其中一个的时候，另一个不更新。这不符合我们的要求：我想要保持他们同步。
 
@@ -170,9 +171,9 @@ class TemperatureInput extends React.Component {
     // ...
 ```
 
-我们知道[props 是只读的]()。当`temperature`在本地状态，`TemperatureInput`可以只调用`this.setState()`去改变它。然而，现在`temperature`作为属性来自父组件，`TemperatureInput`无法控制它。
+我们知道[props 是只读的](https://reactjs.org/docs/components-and-props.html#props-are-read-only)。当`temperature`在本地状态，`TemperatureInput`可以只调用`this.setState()`去改变它。然而，现在`temperature`作为属性来自父组件，`TemperatureInput`无法控制它。
 
-在 React，这通常通过让组件变成"受控"。可以解决。就像 DOM`input`接受`value`和`onChange`属性，因此，自定义的`TemperatureInput`接受来自`Calculator`的`temperature`和`onTemperatureChange`属性。
+在 React，这通常通过让组件变成"受控"可以解决。就像 DOM`input`接受`value`和`onChange`属性，因此，自定义的`TemperatureInput`接受来自`Calculator`的`temperature`和`onTemperatureChange`属性。
 
 现在，当`TemperatureInput`想要去更新它的温度，它调用`this.props.onTemperatureChange`：
 
@@ -278,17 +279,17 @@ class Calculator extends React.Component {
   }
 }
 ```
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/WZpxpz?editors=0010)
 
 现在，不论你编辑哪一个输入框，`this.state.temperature`和`this.state.scale`都被更新。一个输入框按原样取值，因此任何用户输入都将保留，另一个输入框基于它计算。
 
 回顾以下我们编辑输入框的时候，发生了什么：
 
-- React 调用函数`<input>`上指定为`onCHange`的函数。在我们的场景中，这是`TemperatureInput`组件上的`handleChange`方法。
+- React 调用函数`<input>`上指定为`onChange`的函数。在我们的场景中，这是`TemperatureInput`组件上的`handleChange`方法。
 
 - `TemperatureInput`组件的`handleChange`方法调用`this.props.onTemperatureChange()`，使用新的期待的值。它的属性，包括`onTemperatureChange`，通过它的父组件提供，`Calculator`。
 
-- 当他前一次渲染的时候，`Calcularot`指定`TemperatureInput`的`onTemperatureChange`为`Calculator`的`handleCelsiusChange`方法，Farenheit 的`onTemperatureChange`方法为`Calculator`的`handleFahrenheitChange`方法。因此，这两个`Calculator`方法的调用取决于哪一个输入框我们编辑了。
+- 当他前一次渲染的时候，`Calcularot`指定`TemperatureInput`的`onTemperatureChange`为`Calculator`的`handleCelsiusChange`方法，Fahrenheit 的`onTemperatureChange`方法为`Calculator`的`handleFahrenheitChange`方法。因此，这两个`Calculator`方法的调用取决于哪一个输入框我们编辑了。
 
 - 在这些方法内，`Calculator`组件让 React 去重新渲染它自己，通过调用`this.setState()`，使用新的输入值和当前我们编辑的输入框的比例。
 
@@ -296,19 +297,19 @@ class Calculator extends React.Component {
 
 - React 调用分别使用`Calculator`指定的新的属性值去更新`TemperatureInput`组件。它知道 UI 应该长什么样。
 
-- React DOM 更新 DOM，使用沸腾判断并去匹配期望的输入值。我们编辑饿的输入框接受它当前的额值，另一个输入框在转化之后更新温度。
+- React DOM 更新 DOM，使用沸腾判断并去匹配期望的输入值。我们编辑的输入框接受它当前的值，另一个输入框在转化之后更新温度。
 
 每一个更新都经历相同的步骤，一次输入框保持同步。
 
 ### 课程学习
 
-React 应用中的任何数据应该有单一的"数据源"。通常，状态先被添加到需要它去渲染的组件。然后没如果其他组件也需要它，你可以提升他们到最近的共同祖先。与其尝试在不同组件间同步组件，你应该依赖[自顶向下数据流]()。
+React 应用中的任何数据应该有单一的"数据源"。通常，状态先被添加到需要它去渲染的组件。然后没如果其他组件也需要它，你可以提升他们到最近的共同祖先。与其尝试在不同组件间同步组件，你应该依赖[自顶向下数据流](https://reactjs.org/docs/state-and-lifecycle.html#the-data-flows-down)。
 
-状态提升相对于双向绑定方式，导致编写更多"样板"代码，但是作为好处，它较少寻找和解决 bug 的工作。因为任何状态"活在一些组件中，并且组件可以改变它，遭遇 bug 的表面积大大减少。此外，你可以实现任意自定义逻辑去拒绝转化用户输入。
+状态提升相对于双向绑定方式，导致编写更多"样板"代码，但是作为好处，它减少寻找和解决 bug 的工作。因为任何状态"活在"一些组件中，并且组件可以改变它，遭遇 bug 的表面积大大减少。此外，你可以实现任意自定义逻辑去拒绝转化用户输入。
 
 如果一些东西可以从属性或者状态分发，它可能不应该在状态中。比如，与其存储`celsiusValue`和`fahrenheitValue`，我们存储最后编辑的`temperature`和它的`scale`。其他输入框的值总是可以在`render()`方法中被计算出来。这让我们清理或者应用绕过其他域，不丢失任何用户输入的任何精度。
 
-当你看到 UI 上出现一些错误的时候，你可以使用[React Developer Tools]()去检查属性并向上查找树，知道你发现负责更新状态的组件。这让你跟踪 bug 到他们的源头：
+当你看到 UI 上出现一些错误的时候，你可以使用[React Developer Tools](https://github.com/facebook/react/tree/master/packages/react-devtools)去检查属性并向上查找树，直到你发现负责更新状态的组件。这让你跟踪 bug 到他们的源头：
 
 ![](https://reactjs.org/react-devtools-state-ef94afc3447d75cdc245c77efb0d63be.gif)
 

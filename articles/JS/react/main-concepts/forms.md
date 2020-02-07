@@ -1,3 +1,4 @@
+[原文地址](https://reactjs.org/docs/forms.html)
 ### Forms
 
 HTML 表单元素和其他 DOM 元素有点不同，因为表单元素天生保持一些内部状态。比如，这个表单在简单 HTML 接受一个单一的名字：
@@ -11,11 +12,11 @@ HTML 表单元素和其他 DOM 元素有点不同，因为表单元素天生保�
 </form>
 ```
 
-这个表单有默认的 HTML 表单行为，浏览到新的页面，当用户提交表单的时候。如果你在 React 中想要这个行为，它就会工作。但是在大部分场景中，有一个 JavaScript 函数处理表单提交，并且可以访问用户输入到表单的数据是很方便的。达到这个目标的标准方式是叫做"受控的组件"的技术。
+这个表单有默认的 HTML 表单行为，当用户提交表单的时候，跳转到新的页面。如果你在 React 中想要这个行为，它就会工作。但是在大部分场景中，有一个 JavaScript 函数处理表单提交，并且可以访问用户输入到表单的数据是很方便的。达到这个目标的标准方式是叫做"受控组件"的技术。
 
 ### 受控组件
 
-在 HTML 中，表单元素，比如`<input>`，`<textarea>`，和`<select>`通常维护他们自己的状态和更新，基于用户输入。在 React，操作状态通常保存在组件的状态属性，并且只能使用[setState()]()更新。
+在 HTML 中，表单元素，比如`<input>`，`<textarea>`，和`<select>`通常基于用户输入，维护他们自己的状态和更新。在 React，操作状态通常保存在组件的状态属性，并且只能使用[setState()](https://reactjs.org/docs/react-component.html#setstate)更新。
 
 我们可以通过让 React 状态变成"单一数据源"来绑定两者。然后渲染表单的组件也控制在之后的用户输入发生的事情。一个输入表单元素的值被 React 以这种方式控制叫做"受控组件"。
 
@@ -53,11 +54,11 @@ class NameForm extends React.Component {
 }
 ```
 
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/VmmPgp?editors=0010)
 
 因为`value`属性设置在我们的表单元素，显示的值将总是`this.state.value`，让 React 状态为单一数据源。因为`handleChange`在每次键击都更新 React 状态，显示的值将会变成用户输入。
 
-使用一个受控组件，每个状态操作都将和一个处理器函数关联。这导致它直接修改或者验证用户输入。比如，如果我们想要去强制名字使用全部答谢，我们可以这样编写`handleChange`：
+使用一个受控组件，每个状态操作都将和一个处理器函数关联。这导致它直接修改或者验证用户输入。比如，如果我们想要去强制名字使用全部大写，我们可以这样编写`handleChange`：
 ```jsx harmony
 handleChange(event) {
   this.setState({value: event.target.value.toUpperCase()});
@@ -72,7 +73,7 @@ handleChange(event) {
   Hello there, this is some text in a text area
 </textarea>
 ```
-在 React 中，一个`<textarea>`使用一个`value`属性替代。这种方式，一个表单使用一个`<textarea>`可以编写非常像是的表单，使用单行输入：
+在 React 中，一个`<textarea>`使用一个`value`属性替代。这种方式，一个表单使用一个`<textarea>`可以编写非常像是单行输入的表单：
 ```jsx harmony
 class EssayForm extends React.Component {
   constructor(props) {
@@ -111,7 +112,7 @@ class EssayForm extends React.Component {
 
 ### select 标签
 
-在 HTML，`<select>`创建下来列表。比如，这个 HTML 创建一个兴趣的下拉列表：
+在 HTML，`<select>`创建下拉列表。比如，这个 HTML 创建一个兴趣的下拉列表：
 ```jsx harmony
 <select>
   <option value="grapefruit">Grapefruit</option>
@@ -159,7 +160,7 @@ class FlavorForm extends React.Component {
   }
 }
 ```
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/JbbEzX?editors=0010)
 
 以上，这让`<input type="text">`，`<textarea>`，和`<select>`都工作的很像 - 他们所有接受一个`value`属性，这样你可以使用去实现一个受控组件。
 
@@ -170,13 +171,13 @@ class FlavorForm extends React.Component {
 
 ### 文件输入标签
 
-在 HTML 这种，一个`<input type="file">`让用户选择一个或者多个文件，从他们的设备存储，上传到服务端或者通过[File API]()被 JavaScript 操作。
+在 HTML 这种，一个`<input type="file">`让用户选择一个或者多个文件，从他们的设备存储，上传到服务端或者通过[File API](https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications)被 JavaScript 操作。
 
 ```jsx harmony
 <input type="file" />
 ```
 
-因为它的值是只读的，他在 React 中是一个非受控组件。这在[之后的文档]()和其他非受控组件一起讨论。
+因为它的值是只读的，他在 React 中是一个非受控组件。这在[之后的文档](https://reactjs.org/docs/uncontrolled-components.html#the-file-input-tag)和其他非受控组件一起讨论。
 
 ### 处理多个输入
 
@@ -230,9 +231,9 @@ class Reservation extends React.Component {
   }
 }
 ```
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/wgedvV?editors=0010)
 
-注意我们怎么使用 ES6 [计算属性名]()语法去更新状态的 key 对应的给定输入名：
+注意我们怎么使用 ES6 [计算属性名](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names)语法去更新状态的 key 对应的给定输入名：
 ```jsx harmony
 this.setState({
   [name]: value
@@ -244,11 +245,11 @@ var partialState = {};
 partialState[name] = value;
 this.setState(partialState);
 ```
-同时，因为`setState()`自动[合并部分状态到当前状态]()，我们只需要使用改变的部分调用它。
+同时，因为`setState()`自动[合并部分状态到当前状态](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-are-merged)，我们只需要使用改变的部分调用它。
 
 ### 控制输入的空值
 
-指定值属性在一个[受控组件]()，防止用户改变输入，除非你期望。如果你指定给一个`value`，但是输入狂依旧可以边界，你可能意外设置`value`为`undefined`或者`null`。
+指定值属性在一个[受控组件](https://reactjs.org/docs/forms.html#controlled-components)，防止用户改变输入，除非你期望。如果你指定给一个`value`，但是输入狂依旧可以边界，你可能意外设置`value`为`undefined`或者`null`。
 
 下面的代码展示了这个。（输入框先是锁定的，但是一会之后就可以编辑）
 ```jsx harmony
@@ -261,9 +262,9 @@ setTimeout(function() {
 
 ### 受控组件的替代方式
 
-有时候使用受控组件很啰嗦，因为它需要去编写一个事件处理器，为每一种你的数据可以改变并派发所有的输入状态到一个 React 组件。这会特别烦躁，当你转化一个已经存在的代码库到 React，或者使用 React 和非 React 库交互的时候。在这些场景，你可能想要查阅[非受控组件]()，一个实现输入表单的可选技术。
+有时候使用受控组件很啰嗦，因为它需要去编写一个事件处理器，为每一种你的数据可以改变并派发所有的输入状态到一个 React 组件。这会特别烦躁，当你转化一个已经存在的代码库到 React，或者使用 React 和非 React 库交互的时候。在这些场景，你可能想要查阅[非受控组件](https://reactjs.org/docs/uncontrolled-components.html)，一个实现输入表单的可选技术。
 
 ### 完全成熟的解决方案
 
-如果你在寻找一个完整的解决方案，包含验证，保持可访问域的跟踪，表单提交的处理，[Formik]()是一个流行的选择。然而，它基于受控组件和状态管理的相同原则 -- 因此不要忽视去学习他们。
+如果你在寻找一个完整的解决方案，包含验证，保持可访问域的跟踪，表单提交的处理，[Formik](https://jaredpalmer.com/formik)是一个流行的选择。然而，它基于受控组件和状态管理的相同原则 -- 因此不要忽视去学习他们。
 

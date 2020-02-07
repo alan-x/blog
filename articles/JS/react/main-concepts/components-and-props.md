@@ -1,6 +1,7 @@
+[原文地址](https://reactjs.org/docs/components-and-props.html)
 ### 组件和属性
 
- 组件让你分离 UI 到读里的，可重用的块，并切独立的思考每一块。这个页面提供了一个关于组件的概念介绍。你可以[在这里找到组件的详细 API 索引]()。
+ 组件让你分离 UI 到独立的，可重用的块，并且独立的思考每一块。这个页面提供了一个关于组件的概念介绍。你可以[在这里找到组件的详细 API 索引](https://reactjs.org/docs/react-component.html)。
 
 概念上，组件就像 JavaScript 的函数。他们接受任意的输入（叫做"props"）并且返回描述什么应该出现在屏幕上的 React 元素。
 
@@ -14,7 +15,7 @@ function Welcome(props) {
 
 这个函数是一个有效的 React 组件，因为它接受一个单独的"props"（表示 properties）对象参数，接受数据，并返回一个 React 元素。我们把这些组件叫做"函数组件"因为他们就是 JavaScript 函数。
 
-你可以使用一个[ES6 类]()去定义一个组件。
+你可以使用一个[ES6 类](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes)去定义一个组件。
 
 ```jsx harmony
 class Welcome extends React.Component {
@@ -26,7 +27,7 @@ class Welcome extends React.Component {
 
 前面的两个组件从 React 的角度来看都是一样的。
 
-类有一些额外的特性，我们将在[下一个章节]()讨论。到那时，我们将使用函数组件，因为他们的简洁。
+类有一些额外的特性，我们将在[下一个章节](https://reactjs.org/docs/state-and-lifecycle.html)讨论。到那时，我们将使用函数组件，因为他们的简洁。
 
 ### 渲染一个组件
 
@@ -52,7 +53,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-[在 CodePen 尝试它]()
+[在 CodePen 尝试它](https://reactjs.org/redirect-to-codepen/components-and-props/rendering-a-component)
 
 让我们回顾以下在这个例子中发生了什么：
 
@@ -68,7 +69,7 @@ ReactDOM.render(
 
 React 对待小写字母开头的组件为 DOM 标签。比如，`<div />`表示一个 HTML div 标签，但是`<Welcome />`表示一个组件，并且需要`Welcome`在范围中。
 
-了解更多这个约定的原因，请阅读[深入 JSX]()。
+了解更多这个约定的原因，请阅读[深入 JSX](https://reactjs.org/docs/jsx-in-depth.html#user-defined-components-must-be-capitalized)。
 
 ### 组合组件
 
@@ -95,9 +96,9 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://reactjs.org/redirect-to-codepen/components-and-props/composing-components)
 
-通常，新 React 应用有一个单一`App`组件在最顶部。然而，如果你整合 React 到一个存在的应用，你可能使用一个小的组件，比如`Button`开始并逐渐以你的方式到视图层次。
+通常，新 React 应用有一个单一`App`组件在最顶部。然而，如果你整合 React 到一个存在的应用，你可能使用一个小的组件，比如`Button`开始并逐渐以你的方式到扩展到视图顶级层次。
 
 ### 抽取组件
 
@@ -127,7 +128,7 @@ function Comment(props) {
   );
 }
 ```
-[在 CodePen 中尝试]()
+[在 CodePen 中尝试](https://reactjs.org/redirect-to-codepen/components-and-props/extracting-components)
 
 它接受`author`（一个对象），`text`（一个字符串）,和`data`（一个日期）作为属性，并表述一个社区媒体网站的评论。
 
@@ -148,7 +149,7 @@ function Avatar(props) {
 
 `Avatar`不需要知道它是被渲染到一个`Comment`内部。这也是为什么我们给它的属性一个更通用的名字：`user`而不是`author`。
 
-我们推荐以组件组件的观点去命名属性，而不是使用的上下文。
+我们推荐以组件的观点去命名属性，而不是使用的上下文。
 
 我们现在可以简化`Comment`一点：
 ```jsx harmony
@@ -200,20 +201,20 @@ function Comment(props) {
   );
 }
 ```
-[在 CodePen 尝试它]()
+[在 CodePen 尝试它](https://reactjs.org/redirect-to-codepen/components-and-props/extracting-components-continued)
 
 抽取组件可能起先看起来像一个繁重的工作，但是有一个可重用的组件调色板是非常值得的。一个好的规则是如果你 UI 的一部分使用多次（`Button`，`Panel`，`Avatar`），或者它自己本身够复杂（`App`，`FeedStory`，`Comment`）,都是可重用组件的候选。
 
 ### props 是只读的
 
-无论你声明一个组件为[一个函数或者一个类]()，它必须永远不修改它自己的属性。假设这个`sum`函数：
+无论你声明一个组件为[一个函数或者一个类](https://reactjs.org/docs/components-and-props.html#function-and-class-components)，它必须永远不修改它自己的属性。假设这个`sum`函数：
 ```jsx harmony
 function sum(a, b) {
   return a + b;
 }
 ```
 
-这类函数叫做["pure"]()因为他们不尝试去改变他们的输入，并且总是为相同的输入返回相同的结果。
+这类函数叫做["纯函数"](https://en.wikipedia.org/wiki/Pure_function)因为他们不尝试去改变他们的输入，并且总是为相同的输入返回相同的结果。
 
 相反，这个函数是非纯净的，因为它改变了自己的输入：
 ```jsx harmony
@@ -222,11 +223,11 @@ function withdraw(account, amount) {
 }
 ```
 
-React 是足够弹性的，但是它有一个严格的规则：
+React 是足够灵活的，但是它有一个严格的规则：
 
 **所有 React 组件必须表现的像一个纯函数，尊重他们的属性。**
 
-当然，应用 UI 是动态的并随着时间改变。在[下一个章节]()，我们将引入一个新的概念，关于"state"。状态允许 React 组件在用户动作、网络响应，和其他的的响应中去改变他们的输出，不需要遵守这个规则。
+当然，应用 UI 是动态的并随着时间改变。在[下一个章节](https://reactjs.org/docs/state-and-lifecycle.html)，我们将引入一个新的概念，关于"状态"。状态允许 React 组件在用户动作、网络响应，和其他的的响应中去改变他们的输出，不需要遵守这个规则。
 
 
 

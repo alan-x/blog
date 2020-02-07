@@ -1,8 +1,9 @@
+[原文地址](https://reactjs.org/docs/state-and-lifecycle.html)
 ### 状态和生命周期
 
-这个页面引入了 React 组件的状态和生命周期的概念。你可以[在这里找到组件 API 引用的详情]()。
+这个页面引入了 React 组件的状态和生命周期的概念。你可以[在这里找到组件 API 引用的详情](https://reactjs.org/docs/react-component.html)。
 
-思考[前一个章节]()的时钟例子。在[渲染元素]()，我们只学到一种方式去更新 UI。我们调用`ReactDOM.render()`去改变渲染的结果。
+思考[前一个章节](https://reactjs.org/docs/rendering-elements.html#updating-the-rendered-element)的时钟例子。在[渲染元素](https://reactjs.org/docs/rendering-elements.html#rendering-an-element-into-the-dom)，我们只学到一种方式去更新 UI。我们调用`ReactDOM.render()`去改变渲染的结果。
 ```jsx harmony
 function tick() {
   const element = (
@@ -19,7 +20,7 @@ function tick() {
 
 setInterval(tick, 1000);
 ```
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/gwoJZk?editors=0010)
 
 在这个章节，你将学习怎样去创建一个真正可重用的封装的`Clock`组件。它将设置自己的定时器并每秒更新它。
 
@@ -55,14 +56,14 @@ ReactDOM.render(
 );
 ```
 
-为了实现这个，我们需要去添加"state"到`Clock`组件。
+为了实现这个，我们需要去添加"状态"到`Clock`组件。
 
-状态和属性类似，但是它是私有的并且完全由组件控制。
+状态和属性类似，但是它是私有的，并且完全由组件控制。
 
 ### 转化一个函数到类
 你可以在五步之内转化类似`Clock`的函数组件到一个类：
 
-1. 创建一个 [ES6 类]()，使用相同的名字，继承`React.Component`。
+1. 创建一个 [ES6 类](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes)，使用相同的名字，继承`React.Component`。
 
 2. 添加一个单独的空方法到它，叫做`render()`。
 
@@ -85,7 +86,7 @@ class Clock extends React.Component {
 }
 ```
 
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/zKRGpo?editors=0010)
 
 `Clock`现在定义为一个类而不是一个函数。
 
@@ -93,7 +94,7 @@ class Clock extends React.Component {
 
 ### 添加本地状态到类
 
-我们将在三步内从属性中移动`data`到状态：
+我们将在三步内从属性中移动`date`到状态：
 
 1. 在`render()`方法内使用`this.state.date`替换`this.props.date`。
 ```jsx harmony
@@ -169,7 +170,7 @@ ReactDOM.render(
 );
 ```
 
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/KgQpJd?editors=0010)
 
 下一步，我们将创建`Clock`设置他自己的定时器并每秒更新它自己。
 
@@ -177,9 +178,9 @@ ReactDOM.render(
 
 在有很多组件的应用中，当组件被摧毁的时候释放被组件使用的资源很重要。
 
-我们要[设置一个定时器]()当`Clock`被第一次渲染到 DOM 的时候。这在 React 中叫做"挂载"。
+当`Clock`被第一次渲染到 DOM 的时候，我们要[设置一个定时器](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/setInterval)。这在 React 中叫做"挂载"。
 
-我们也要[清理定时器]()，当`Clock`产生的 DOM 被移除的时候。这在 React 中叫做"卸载"。
+当`Clock`产生的 DOM 被移除的时候，我们也要[清理定时器](https://developer.mozilla.org/en-US/docs/Web/API/WindowTimers/clearInterval)。这在 React 中叫做"卸载"。
 
 我们可以在组件类中声明特定的方法去执行一些代码，当组件挂载和卸载的时候：
 ```jsx harmony
@@ -222,7 +223,7 @@ class Clock extends React.Component {
 
 注意我们是如何保存定时器 ID 到`this`（`this.timerID`）。
 
-尽管`this.props`是被 React 自己设置的并且`this.state`有特定的含义，你可以自由手动添加额外的域到类，如果你需要存储一些东旭不需要参与数据流（比如一个定时器 ID）。
+尽管`this.props`是被 React 自己设置的，并且`this.state`有特定的含义，如果你需要存储一些不需要参与数据流（比如一个定时器 ID）的东西，你可以自由手动添加额外的域到类。
 
 我们将在`componentWillUnmount()`生命周期方法卸载定时器：
 ```jsx harmony
@@ -230,7 +231,7 @@ class Clock extends React.Component {
     clearInterval(this.timerID);
   }
 ```
-最后，我们将实现一个叫做`tick()`的方法，`Clock`将会每秒执行。
+最后，我们将实现一个叫做`tick()`的方法，`Clock`将会每秒执行它。
 
 它将会使用`this.setState()`去调度更新到组件本地状态：
 ```jsx harmony
@@ -273,13 +274,13 @@ ReactDOM.render(
 );
 ```
 
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/amqdNA?editors=0010)
 
 现在时钟每秒执行一次。
 
 快速回顾发生了什么，还有哪些方法按顺序被调用：
 
-1. 当`<Clock />`传递给`ReactDOM.render()`，React 调用`Clock`组件的构造器，因为`Clock`需要去显示当前的实践，它使用包含当前实践的对象初始化`this.state`。我们将在稍后更新这个状态。
+1. 当`<Clock />`传递给`ReactDOM.render()`，React 调用`Clock`组件的构造器，因为`Clock`需要去显示当前的时间，它使用包含当前时间的对象初始化`this.state`。我们将在稍后更新这个状态。
 
 2. React 之后调用`Clock`组件的`render()`方法。这是 React 知道显示什么到屏幕上的方式。React 更新 DOM 去匹配`Clock`的渲染结果。
 
@@ -309,7 +310,7 @@ this.setState({comment: 'Hello'});
 
 ### 状态更新可能是异步的
 
-React 可能会为了性能批量将`setState()`调用到单一的更新。
+React 可能会为了性能批量将`setState()`调用合并到单一的更新。
 
 因为`this.props`和`this.state`可能异步更新，你不应该依赖他们的值去计算下一个状态。
 
@@ -328,7 +329,7 @@ this.setState((state, props) => ({
   counter: state.counter + props.increment
 }));
 ```
-前面我们使用[箭头函数]()，但是也可以使用常规函数：
+前面我们使用[箭头函数](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Functions/Arrow_functions)，但是也可以使用常规函数：
 ```jsx harmony
 // Correct
 this.setState(function(state, props) {
@@ -408,8 +409,8 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/vXdGmd?editors=0010)
 
 每一个`Clock`设置他自己的定时器并独立更新。
 
-在 React 应用中，一个组件是否有状态是一个组件的实现详情，可能随着实践改变。你可以使用无状态组件在有状态组件内，或者相反。
+在 React 应用中，一个组件是否有状态是一个组件的实现详情，可能随着时间改变。你可以使用无状态组件在有状态组件内，或者相反。

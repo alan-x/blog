@@ -1,8 +1,9 @@
+[原文地址](https://reactjs.org/docs/conditional-rendering.html)
 ### 条件化请求
 
 在 React，你可以创建不同的组件封装你需要的行为。然后，你可以只渲染他们的一部分，取决于你应用的状态。
 
-React 中的条件化渲染和 JavaScript 中的条件化工作方式一致。使用 JavaScript 操作符，比如[if]()或者[conditional operator]()去创建元素表示当前状态，让 React 更新 UI 去匹配他们
+React 中的条件化渲染和 JavaScript 中的条件化工作方式一致。使用 JavaScript 操作符，比如[if](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/if...else)或者[conditional operator](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Conditional_Operator)去创建元素表示当前状态，让 React 更新 UI 去匹配他们。
 
 假设有两个组件：
 ```jsx harmony
@@ -30,7 +31,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-[在 CodePen 中尝试]()
+[在 CodePen 中尝试](https://codepen.io/gaearon/pen/ZpVxNq?editors=0011)
 
 这个例子渲染一个不同的欢迎，依赖于`isLoggedIn`属性。
 
@@ -54,7 +55,7 @@ function LogoutButton(props) {
   );
 }
 ```
-在瞎买呢的例子，我们将创建一个[有状态的组件]()，叫做`LoginButton`。
+在下面的例子，我们将创建一个[有状态的组件](https://reactjs.org/docs/state-and-lifecycle.html#adding-local-state-to-a-class)，叫做`LoginButton`。
 
 它将渲染`<LoginButton />`或者`<LogoutButton/>`，取决于它当前的状态。它将渲染前一个例子中的`<Greeting />`。
 
@@ -99,13 +100,13 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/QKzAgB?editors=0010)
 
 当声明一个变量并使用一个`if`语句是一个很好的方式去渲染一个组件，有时候你可能想要使用一个更短的语法。还有一些其他方式在 JSX 内联条件，在下面解释。
 
 
 ### 使用逻辑 && 操作符内联
-你可能[在 JSX 中嵌入任何表达式]()，通过包裹他们到花括号。这包含 JavaScript 逻辑`&&`操作符。他可以处理包含一个元素的条件化：
+通过包裹他们到花括号，你可能[在 JSX 中嵌入任何表达式](https://reactjs.org/docs/introducing-jsx.html#embedding-expressions-in-jsx)。这包含 JavaScript 逻辑`&&`操作符。他可以处理包含一个元素的条件化：
 ```jsx harmony
 function Mailbox(props) {
   const unreadMessages = props.unreadMessages;
@@ -127,7 +128,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-[在 CodePen 尝试它]()
+[在 CodePen 尝试它](https://codepen.io/gaearon/pen/ozJddz?editors=0010)
 
 它可以工作因为在 JavaScript 中，`true && expression`总是执行`expression`，并且`false && expression`总是执行`false`。
 
@@ -135,7 +136,7 @@ ReactDOM.render(
 
 ### 使用条件化操作符内联 If-Else
 
-内联条件化渲染元素的另一个方法是使用 JavaScript 的条件化操作符[condition ? true: false]()。
+内联条件化渲染元素的另一个方法是使用 JavaScript 的条件化操作符[condition ? true: false](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/Conditional_Operator)。
 
 在下面的例子中，我们使用它去条件化渲染一个更小的块的文字。
 ```jsx harmony
@@ -164,7 +165,7 @@ render() {
   );
 }
 ```
-就像在 JavaScript，这取决于你去选择一个方式风格，基于你和你的团队觉得什么更易读。记住当条件太复杂的时候，最好[抽取一个组件]()
+就像在 JavaScript，这取决于你去选择一个方式风格，基于你和你的团队觉得什么更易读。记住当条件太复杂的时候，最好[抽取一个组件](https://reactjs.org/docs/components-and-props.html#extracting-components)
 
 ### 防止组件渲染
 
@@ -214,9 +215,9 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-[在 CodePen 中尝试它]()
+[在 CodePen 中尝试它](https://codepen.io/gaearon/pen/Xjoqwm?editors=0010)
 
-从一个组件的`render`方法返回`null`不影响触发组件的额生命周期方法。比如`componentDidUpdate`将依旧被调用。
+从一个组件的`render`方法返回`null`不影响触发组件的生命周期方法。比如`componentDidUpdate`将依旧被调用。
 
 
 

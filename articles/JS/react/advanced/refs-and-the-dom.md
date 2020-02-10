@@ -1,8 +1,9 @@
+[原文地址](https://reactjs.org/docs/refs-and-the-dom.html)
 ### Refs and the DOM
 
-Refs 提供访问 render 方法创建的 DOM 或者 React 元素。
+Refs 提供访问 render 方法创建的 DOM 或者 React 元素的方法。
 
-在典型的 React 数据流，Props 是父组件和他们子孙交互的唯一方式。为了修改一个组件，你使用新的 props 重新渲染它。然而，在一些场景中，你需要命令式的在典型数据流之外修改一个子组件。被修改的子组件可以是一个 React 组件的实例，也可以是一个 Dom element。对于这两种场景，React 提供一个紧急出口。
+在典型的 React 数据流中，Props 是父组件和他们子孙交互的唯一方式。为了修改一个组件，你使用新的 props 重新渲染它。然而，在一些场景中，你需要命令式的在典型数据流之外修改一个子组件。被修改的子组件可以是一个 React 组件的实例，也可以是一个 Dom element。对于这两种场景，React 提供一个紧急出口。
 
 ### 什么时候使用 Refs
 
@@ -17,9 +18,9 @@ Refs 提供访问 render 方法创建的 DOM 或者 React 元素。
 
 ### 不要过度使用 Refs
 
-你的第一倾向可能是使用 refs "让东西发生"在你的 app 中。如果这就是场景，花点时间，严谨的思考一下，组件树的哪里应该拥有状态。通常，很清晰的，拥有状态的适合点在层级的高处。查阅[Lifting State Up]()指南了解这个例子。
+你的第一倾向可能是使用 refs "让东西发生"在你的应用中。如果这就是场景，花点时间，严谨的思考一下，组件树的哪里应该拥有状态。通常，很清晰的，拥有状态的适合点在层级的高处。查阅[Lifting State Up](https://reactjs.org/docs/lifting-state-up.html)指南了解这个例子。
 
-注意：下面的例子已经更新为使用 React 16。3 引入的`React.createRef()` API。如果你使用更早版本的 React，我们推荐使用[callback refs]()替代。
+注意：下面的例子已经更新为使用 React 16。3 引入的`React.createRef()` API。如果你使用更早版本的 React，我们推荐使用[callback refs](https://reactjs.org/docs/refs-and-the-dom.html#callback-refs)替代。
 
 ### 创建 Refs
 Refs 使用`React.createRef()`，并且通过`ref`属性绑定 React 元素。Refs 通常在组件构造之后被赋予一个实例属性，这样他们可以贯穿整个组件被引用。
@@ -163,17 +164,17 @@ function CustomTextInput(props) {
 ### 暴露 DOM 引用给父组件
 在罕见的场景，你可能想要从父组件访问一个子组件的 DOM 节点。这通常不被推荐，因为它破坏了组件的封装，但是偶尔它很有用，对于触发聚焦或者测量子组件 DOM 节点的大小和位置。
 
-尽管你可以[添加一个 ref 到子组件]()。这不是一个理想的解决方案，因为你只能得到一个组件的实例而不是一个 DOM 节点。此外，它无法和函数组件一起工作。
+尽管你可以[添加一个 ref 到子组件](https://reactjs.org/docs/refs-and-the-dom.html#adding-a-ref-to-a-class-component)。这不是一个理想的解决方案，因为你只能得到一个组件的实例而不是一个 DOM 节点。此外，它无法和函数组件一起工作。
 
-如果你使用 React 16.3 或者更高，我们推荐为这种场景使用 [ref forwarding]()。**ref forwarding 让组件可选的暴露任何子组件的 ref 作为他们自己的**。你可以[在 ref forwarding 文档]()找到如何暴露一个子组件的 DOM 给父组件的详细例子。
+如果你使用 React 16.3 或者更高，我们推荐为这种场景使用 [ref forwarding](https://reactjs.org/docs/forwarding-refs.html)。**ref forwarding 让组件可选的暴露任何子组件的 ref 作为他们自己的**。你可以[在 ref forwarding 文档](https://reactjs.org/docs/forwarding-refs.html#forwarding-refs-to-dom-components)找到如何暴露一个子组件的 DOM 给父组件的详细例子。
 
-如果你使用 React 16.2 或者更低，或者如果你需要比 ref forwarding 提供的更加弹性，你可以使用[这个替代解决方法]()并且明确传递一个 ref 作为不同命名的属性。
+如果你使用 React 16.2 或者更低，或者如果你需要比 ref forwarding 提供的更加弹性，你可以使用[这个替代解决方法](https://gist.github.com/gaearon/1a018a023347fe1c2476073330cc5509)并且明确传递一个 ref 作为不同命名的属性。
 
-当可能，我们反对暴露 DOM 节点，但是它是一个很有用的逃生舱口。注意这个方法需要你去添加一些代码到子组件。如果你需要对子组件实现绝对的不控制，你最后的选项是使用`findDOMNode()`，但是它在[StrictMode]()是不被鼓励且被抛弃的。
+当可能，我们反对暴露 DOM 节点，但是它是一个很有用的逃生舱口。注意这个方法需要你去添加一些代码到子组件。如果你需要对子组件实现绝对的不控制，你最后的选项是使用[findDOMNode()](https://reactjs.org/docs/react-dom.html#finddomnode)，但是它在[StrictMode](https://reactjs.org/docs/strict-mode.html#warning-about-deprecated-finddomnode-usage)是不被鼓励且被抛弃的。
 
 ### Callback Refs
 
-React 也支持其他方式去设置 refs，叫做"callback refs"，可以在设置和取消的时候做到更细力度的控制。
+React 也支持其他方式去设置 refs，叫做"callback refs"，可以在设置和取消的时候做到更细粒度的控制。
 
 作为传递`createRef()`创建的`ref`的替代，你传递一个函数。函数接收 React 组件实例或者 HTML DOM 元素作为它的参数，它可以在其他地方被存储和访问。
 
@@ -242,14 +243,14 @@ class Parent extends React.Component {
 }
 ``` 
 
-在前面的例子中，`Parent`传递它的 ref callback 作为一个`inputRef`属性给`CustomTextInput`，并且`CustomTextInput`传递相同的函数作为一个特殊的`ref`属性到`<input>`。作为结果，`Parent`的`this.inputElement`将会设置为`CustomTextInput`中的`<input>`元素对应的 DOM 节点。
+在前面的例子中，` Parent`传递它的 ref callback 作为一个`inputRef`属性给`CustomTextInput`，并且`CustomTextInput`传递相同的函数作为一个特殊的`ref`属性到`<input>`。作为结果，`Parent`的`this.inputElement`将会设置为`CustomTextInput`中的`<input>`元素对应的 DOM 节点。
 
 ### 遗留 API：String Refs
 
 如果你在之前使用过 React，你可能对`ref`属性是一个字符的老的 API 很熟悉，像"textInput"，DOM 节点像`this.refs.textInput`一样被访问。我们强烈返回它因为 string refs 有[一些问题]()，被认为是遗留，并且**可能在未来的一个发行中被移除**。
 
-注意：如果你现在使用`this.refs.textInput`去访问 refs。我们推荐使用[callback pattern]()或者[createRef API]()替代。
+注意：如果你现在使用`this.refs.textInput`去访问 refs。我们推荐使用[callback pattern](https://reactjs.org/docs/refs-and-the-dom.html#callback-refs)或者[createRef API](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs)替代。
 
 ### callback refs 注意事项
 
-如果`ref`回到定义为一个行内函数，它将会在更新的时候被调用两次，一次是使用`null`，一次使用 DOM 元素。这是因为函数的新实例在每一次渲染的时候都会被创建，所以 React 需要清理旧的 ref 并设置一个新的。你可以避免这个，通过定义`ref` callback 为一个类上的绑定方法，但是注意这在大部分情况下没关系。
+如果`ref`回到定义为一个行内函数，它将会在更新的时候被调用两次，一次是使用`null`，一次使用 DOM 元素。这是因为函数的新实例在每一次渲染的时候都会被创建，所以 React 需要清理旧的 ref 并设置一个新的。你可以，通过定义`ref` callback 为一个类上的绑定方法，避免这个问题。但是注意这在大部分情况下没关系。

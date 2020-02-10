@@ -1,26 +1,27 @@
+ [原文地址](https://reactjs.org/docs/higher-order-components.html)
 ### Higher-Order Components
 
 高阶组件（HOC）是 React 重用组件逻辑的高级技术。HOC 本身不是 React API 的一部分。他们是 React 的组成性质中产生的模式。
 
-具体的，**一个高阶组件是一个函数，接收一个组件，并返回一个新的组件。
+具体的，**一个高阶组件是一个函数，接收一个组件，并返回一个新的组件。**
 ```jsx harmony
 const EnhancedComponent = higherOrderComponent(WrappedComponent);
 ```
 
 一个组件传输属性到 UI，一个高阶组件传输一个组件到另一个组件。
 
-HOC 在第三方 React 库很常见，比如 Redux 的[connect]()和 Relay 的[createFragmentContainer]()。
+HOC 在第三方 React 库很常见，比如 Redux 的[connect](https://github.com/reduxjs/react-redux/blob/master/docs/api/connect.md#connect)和 Relay 的[createFragmentContainer](http://facebook.github.io/relay/docs/en/fragment-container.html)。
 
 在这个文档，我们将讨论为什么高阶组件很有用，还有如何编写你自己的。
 
 ### 为分离关注点使用 HOC。
 
 注意：
-我们之前推荐使用 mixin 作为处理分离关注点的方式。我们发现 mixin 比他们的价值导致了更多问题。[了解更多]()关于为什么我们移除 mixin 和怎样转移你已经存在的组件。 
+我们之前推荐使用 mixin 作为处理分离关注点的方式。我们发现 mixin 比他们的价值导致了更多问题。[了解更多](https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html)关于为什么我们移除 mixin 和怎样转移你已经存在的组件。 
 
 组件是 React 重用代码的主要单元。然而，你将会发现一些模式并不十分适合传统组件。
 
-比如，假设你有一个`CommentList`组件订阅一个外部的数据源去显然一个组件列表：
+比如，假设你有一个`CommentList`组件订阅一个外部的数据源去显示一个组件列表：
 ```jsx harmony
 class CommentList extends React.Component {
   constructor(props) {
@@ -149,11 +150,11 @@ function withSubscription(WrappedComponent, selectData) {
   };
 }
 ```
-注意一个 HOC 没有修改输入的组件，也没有使用继承去复制行为。HOC 组合原始的组件，通过将它包裹在一个容器组件。一个 HOC 是一个纯函数，没有任何富作用。
+注意一个 HOC 没有修改输入的组件，也没有使用继承去复制行为。HOC 组合原始的组件，通过将它包裹在一个容器组件。一个 HOC 是一个纯函数，没有任何副作用。
 
 这就是它！包裹的组件接收容器所有的属性，和一个新的属性，`data`，它用来渲染它的输出。HOC 不关心数据怎么或者为什么使用，并且包裹的组件不关心数据从哪里来。
 
-因为`withSubscription`是一个普通函数，你可以添加你喜欢的参数数量，比如，你可能想要让`data`属性可配置，进一步隔离 HOC 和包裹的组件。或者你可以接收一个参数配置`shouldComponentUpdate`,或者一个可以配置数据源。这都是可能的，因为 HOC 完全手组件定义控制。
+因为`withSubscription`是一个普通函数，你可以添加你喜欢的参数数量，比如，你可能想要让`data`属性可配置，进一步隔离 HOC 和包裹的组件。或者你可以接收一个参数配置`shouldComponentUpdate`,或者一个可以配置数据源。这都是可能的，因为 HOC 完全受组件定义控制。
 
 类似组件，`withSubscription`和包裹的组件完全是基于属性的。这让它可以很简单的从一个 HOC 切换到另一个，只要他们提供相同的属性给包裹的组件。比如，如果你改变数据获取库，这将会很有用。
 
@@ -195,7 +196,7 @@ function logProps(WrappedComponent) {
 ```
 这个 HOC 和操作版本有相同的功能，避免了潜在的冲突。它和类和函数组件都能一起使用。并且因为它是纯函数，它可以和其他 HOC 组合，甚至和它自己。
 
-你可能注意到 HOC 和**容器组件**模式的类似。容器组件是分离高级别和低级别关注点的指责的部分的策略。容器管理像订阅或者状态的东西，并传递属性到组件处理类似渲染 UI。HOC 使用容器作为他们实现的一部分。你可以认为 HOC 是参数化的容器组件定义。
+你可能注意到 HOC 和**容器组件**模式的类似。容器组件是分离高级别和低级别关注点的职责的部分的策略。容器管理像订阅或者状态的东西，并传递属性到组件处理类似渲染 UI。HOC 使用容器作为他们实现的一部分。你可以认为 HOC 是参数化的容器组件定义。
 
 ### 约定：传递不相关的属性到包裹的组件
 
@@ -221,7 +222,7 @@ render() {
   );
 }
 ```
-这个约定帮助确保 HOC 是尽可能弹性和可重用的。
+这个约定帮助确保 HOC 是尽可能灵活和可重用的。
 
 ### 约定：最大化组合
 
@@ -229,7 +230,7 @@ render() {
 ```jsx harmony
 const NavbarWithRouter = withRouter(Navbar);
 ```
-通常，HOC 接收额外的参数，在这个从 Relay 的例子中，一个配置i 对象用于指定一个组件的数据依赖：
+通常，HOC 接收额外的参数，在这个从 Relay 的例子中，一个配置对象用于指定一个组件的数据依赖：
 ```jsx harmony
 const CommentWithRelay = Relay.createContainer(Comment, config);
 ```
@@ -264,10 +265,10 @@ const EnhancedComponent = enhance(WrappedComponent)
 ```
 (相同的属性也允许`connect`和其他增强风格的 HOC 作为装饰器使用，一个 experimental JavaScript proposal。)
 
-`comopse`工具函数被 lodash 在内的许多三方库包含（比如[lodash.flowRight]()，[Redux]()，[Ramda]()）。
+`comopse`工具函数被 lodash 在内的许多三方库包含（比如[lodash.flowRight](https://lodash.com/docs/#flowRight)，[Redux](https://redux.js.org/api/compose)，[Ramda](https://ramdajs.com/docs/#compose)）。
 
 ### 约定：为了方便调试，包裹显示名字
-HOC 创建的容器组件显示在[React Developer Tools]()就像任何其他组件。为了方便调试，选择一个显示名字表示它是 HOC 的结果。
+HOC 创建的容器组件就像任何其他组件显示在[React Developer Tools](https://github.com/facebook/react-devtools)。为了方便调试，选择一个名字显示表示它是 HOC 的结果。
 
 最常见的技术是包裹包裹组件的显示名字。因此如果你的高阶组件命名为`withSubscription`，包裹的组件的显示名字是`CommentList`，使用显示名`WithSubscriptiion(CommentList)`：
 ```jsx harmony
@@ -283,10 +284,10 @@ function getDisplayName(WrappedComponent) {
 ```
 
 ### 注意
-高级组件有一些不可见的警告，如果你刚接触 React。
+如果你刚接触 React，高级组件有一些不可见的警告。
 
 ### 不要在 render 方法内使用 HOC
-React 的 diff 算法（叫做 reconciliation）使用组件表示去决定它是否更新存在的子树或者抛弃它重新挂载一个。如果从`render`返回的组件和前一个渲染的相等（`===`），React 递归更新子树，通过将它和新的 diff。如果他们不相等，前一个紫薯完全被卸载。
+React 的 diff 算法（叫做 reconciliation）使用组件表示去决定它是否更新存在的子树或者抛弃它重新挂载一个。如果从`render`返回的组件和前一个渲染的相等（`===`），React 递归更新子树，通过将它和新的 diff。如果他们不相等，前一个子树完全被卸载。
 
 通常，你不应该去关心这个。但是对 HOC 和重要，因为它意味着你无法应用一个 HOC 到一个组件的 render 方法：
 
@@ -301,15 +302,15 @@ render() {
 ```
 这里的问题不仅仅是性能 -- 重新挂载一个组件导致组件的状态和它的所有子元素全部丢失。
 
-相反，在组件定义之外应用 HOC，让组件只创建一次。然后，它的定义将会在贯穿渲染一致。这通常是你需要的，无论如何。
+相反，在组件定义之外应用 HOC，让组件只创建一次。然后，它的定义将会在贯穿渲染一致。无论如何，这通常是你需要的。
 
-在这些罕见的场景，你需要动态应用一个 HOC，你可以在一个组件声明周期方法或者构造器中做。
+在这些罕见的场景，你需要动态应用一个 HOC，你可以在一个组件声明周期方法或者构造器中这么做。
 
 ### 静态方法必须被复制
 
 有时候，在 React 组件定义一个静态方法是非常有用的。比如，Relay 容器暴露一个静态方法`getFragment`去促进 GraphQL 片段的组合。
 
-当你应用一个 HOC 到一个组件，尽管，原始的组件被容器组件包谷。这意味新组件没有任何原始组件的静态方式：
+当你应用一个 HOC 到一个组件，尽管，原始的组件被容器组件包裹。这意味新组件没有任何原始组件的静态方式：
 ```jsx harmony
 // Define a static method
 WrappedComponent.staticMethod = function() {/*...*/}
@@ -329,7 +330,7 @@ function enhance(WrappedComponent) {
   return Enhance;
 }
 ```
-然而，这需要你明确知道那个方法需要被复制。你可以使用[hoist-non-react-statics]()去自动复制所有非 React 静态方法：
+然而，这需要你明确知道那个方法需要被复制。你可以使用[hoist-non-react-statics](https://github.com/mridgway/hoist-non-react-statics)去自动复制所有非 React 静态方法：
 ```jsx harmony
 import hoistNonReactStatic from 'hoist-non-react-statics';
 function enhance(WrappedComponent) {
@@ -352,5 +353,5 @@ import MyComponent, { someFunction } from './MyComponent.js';
 
 ```
 ### Refs 不传递
-尽管高阶组件约定传递所有的属性到包裹的组件，这对于 ref 无效。这是因为`ref` 不是一个真正的属性 -- 像`key`，它被 React 特殊处理。如果你天一阁一个 ref 到一个元素，他的组件是 HOC 的结果，ref 引用是最外层的容器组件的实例，而不是包裹的组件。
-这个问题的解决方案是使用`React.forwardRef`API（从 React 16.3 引入）。[在转发 ref 了解更多关于它的消息]()。
+尽管高阶组件约定传递所有的属性到包裹的组件，这对于 ref 无效。这是因为`ref` 不是一个真正的属性 -- 像`key`，它被 React 特殊处理。如果你添加一个 ref 到一个元素，他的组件是 HOC 的结果，ref 引用是最外层的容器组件的实例，而不是包裹的组件。
+这个问题的解决方案是使用`React.forwardRef`API（从 React 16.3 引入）。[在转发 ref 了解更多关于它的消息](https://reactjs.org/docs/forwarding-refs.html)。

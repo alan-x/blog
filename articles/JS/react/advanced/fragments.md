@@ -1,5 +1,6 @@
+[原文地址](https://reactjs.org/docs/fragments.html)
 ### Fragments
-React 中一个常见模式是一个组件返回多个元素。Fragment 让你分组一个列表的子组件，不太贱额外节点到 DOM。
+React 中一个常见模式是一个组件返回多个元素。Fragment 让你分组一个列表的子组件，不需要添加额外节点到 DOM。
 ```jsx harmony
 render() {
   return (
@@ -11,7 +12,7 @@ render() {
   );
 }
 ```
-还有一个新的[缩写语法]()去声明他们。
+还有一个新的[缩写语法](https://reactjs.org/docs/fragments.html#short-syntax)去声明他们。
 
 ### 动机
 组件的一个常见模式是返回一个列表的子组件。使用这个例子的 React 片段：
@@ -94,7 +95,7 @@ class Columns extends React.Component {
 你可以像使用任何其他元素一样使用`<></>`，除了它不支持 key 或者属性。
 
 ### 有 Key 的 Fragment
-Fragment 使用明确的`<React.Fragment>`语法声明可以有 key。一个使用场景是映射一个几何到一个片段数组 -- 比如，去创建一个描述列表：
+Fragment 使用明确的`<React.Fragment>`语法声明可以有 key。一个使用场景是映射一个集合到一个片段数组 -- 比如，去创建一个描述列表：
 ```jsx harmony
 function Glossary(props) {
   return (
@@ -110,10 +111,10 @@ function Glossary(props) {
   );
 }
 ```
-`key`是唯一的可以传递给`Fragment`的属性。在未来，我们可能田间对其他属性的支持，比如事件处理器。
+`key`是唯一的可以传递给`Fragment`的属性。在未来，我们可能添加对其他属性的支持，比如事件处理器。
 
 ### 在线例子：
-你可以尝试新的 JSX 片段语法，使用这个[CodePen]()。
+你可以尝试新的 JSX 片段语法，使用这个[CodePen](https://codepen.io/reactjs/pen/VrEbjE?editors=1000)。
 
 
 

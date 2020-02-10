@@ -1,13 +1,14 @@
+[原文地址](https://reactjs.org/docs/render-props.html)
 ### Render Props
-术语["render prop"]()指的是一个在组件间使用一个 prop 分享代码的技术，它的值是一个函数。
+术语["render prop"](https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce)指的是一个在组件间使用一个 prop 分享代码的技术，它的值是一个函数。
 
-一个有 render prop 的组件接收一个函数，它返回一个 React 元素并调用它，而不是实现自己的渲染逻辑。
+一个有 render prop 的组件接收一个函数，它返回一个 React 元素，调用它，而不是实现自己的渲染逻辑。
 ```jsx harmony
 <DataProvider render={data => (
   <h1>Hello {data.target}</h1>
 )}/>
 ```
-使用 render props 的库包括[React ROuter]()，[Downshift]()，和[Formik]()。
+使用 render props 的库包括[React ROuter](https://reacttraining.com/react-router/web/api/Route/render-func)，[Downshift](https://github.com/paypal/downshift)，和[Formik](https://github.com/jaredpalmer/formik)。
 
 在这个文档，我们将讨论为什么 render prop 很有用，怎样编写你自己的渲染属性。
 
@@ -41,11 +42,11 @@ class MouseTracker extends React.Component {
   }
 }
 ```
-当鼠标在屏幕上移动的时候，组件显示它的 (x, y) 坐标在`<p>`内。
+当鼠标在屏幕上移动的时候，组件在`<p>`内显示它的 (x, y) 坐标。
 
 现在问题是：我们怎样在其他组件重用这个行为？换句话说，如果其他组件需要去知道鼠标位置，我们可以封装这个行为，这样我们可以简单的使用这个组件分享它？
 
-因为组件是 React 中代码重用的基本单元，让我们稍微重构代码去使用`<Mouse>`组件，封装我们需要去重用的行为。
+因为组件是 React 中代码重用的基本单元，让我们稍微重构代码去使用`<Mouse>`组件，封装我们需要重用的行为。
 ```jsx harmony
 // The <Mouse> component encapsulates the behavior we need...
 class Mouse extends React.Component {
@@ -202,7 +203,7 @@ class MouseTracker extends React.Component {
 
 这个技术让我们需要分享的行为变得及其方便。为了得到这个行为，使用一个`render`属性渲染一个`<Mouse>`，告诉他使用当前鼠标的 (x, y) 渲染啥。
 
-关于渲染属性一个有趣的事需要注意的是你可以实现大部分[高阶组件]()（HOC）使用一个带渲染属性的常规组件。比如没如果你想要使用`withMouse`HOC 替代一个`<Mouse>`组件，你可以简单创建一个使用渲染属性的的常规组件。
+关于渲染属性一个有趣的事需要注意的是你可以实现大部分[高阶组件](https://reactjs.org/docs/higher-order-components.html)（HOC）使用一个带渲染属性的常规组件。比如没如果你想要使用`withMouse`HOC 替代一个`<Mouse>`组件，你可以简单创建一个使用渲染属性的的常规组件。
 
 ```jsx harmony
 // If you really want a HOC for some reason, you can easily
@@ -222,7 +223,7 @@ function withMouse(Component) {
 所以，使用一个渲染属性让他可以使用两种模式。
 
 ### 使用不是 render 的属性
-有一点很重要，需要记住只是因为这个模式叫做"render props"，你不必使用一个叫做 render 的属性名去使用这个模式。实际上，[组件用来知道渲染什么的任何函数属性的技术叫做一个"render prop"]()。
+有一点很重要，需要记住只是因为这个模式叫做"render props"，你不必使用一个叫做 render 的属性名去使用这个模式。实际上，[组件用来知道渲染什么的任何函数属性的技术叫做一个"render prop"](https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce)。
 
 尽管前面的例子使用`render`，我们可以简单的使用`children`属性！
 ```jsx harmony
@@ -239,7 +240,7 @@ function withMouse(Component) {
   )}
 </Mouse>
 ```
-你可以在[react-motion]()API 中看见这个技术。
+你可以在[react-motion](https://github.com/chenglou/react-motion)API 中看见这个技术。
 
 因为这个技术不太常见，你可能想要去明确的状态`children`应该是一个函数，在你的`propTypes`当这样设计一个 API 的时候：
 ```jsx harmony
@@ -252,7 +253,7 @@ Mouse.propTypes = {
 
 ### 当 Render Props 和 React.PureComponent 一起使用的时候要注意
 
- 使用一个渲染属性会抵消使用[React.PureComponent]()带来的优点，如果你在`render`方法内创建一个函数。这是因为浅属性比较将会总是为新属性返回`false`，这个场景中的每一个`render`将会为渲染属性生产新的值。
+ 使用一个渲染属性会抵消使用[React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent)带来的优点，如果你在`render`方法内创建一个函数。这是因为浅属性比较将会总是为新属性返回`false`，这个场景中的每一个`render`将会为渲染属性生产新的值。
 
 比如，继续前面的`<Mouse>`组件，如果`Mouse`是继承自`React.PureComponent`，而不是`React.Component`，我们的例子可能看起来像这样：
 ```jsx harmony

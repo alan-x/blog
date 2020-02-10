@@ -1,11 +1,11 @@
+[原文地址](https://www.w3.org/TR/wai-aria-practices-1.1/#dialog_modal)
 ### Portals
 
-Portal 提供了一个遗留的方式去渲染子组件到一个 DOM 节点，这个 DOM 节点存在在父组件 DOM 层级之外。
+Portal 提供了一个第一等的方式去渲染子组件到一个 DOM 节点，这个 DOM 节点存在在父组件 DOM 层级之外。
 ```jsx harmony
 ReactDOM.createPortal(child, container)
 ```
-第一个参数（`child`）是任意[可渲染的 React 子组件]()，比如一个元素，字符串，或者片段。第二个参数（`container`）是一个 DOM 元素。
-
+第一个参数（`child`）是任意[可渲染的 React 子组件](https://reactjs.org/docs/react-component.html#render)，比如一个元素，字符串，或者片段。第二个参数（`container`）是一个 DOM 元素。
 
 ### 使用
 通常，当你从一个组件的 render 方法返回一个元素，它挂载到 DOM 作为最近父节点的子组件。
@@ -33,7 +33,7 @@ render() {
 ```
 portal 一个典型的使用常见是当父组件有一个`overflow:hidden`或者`z-index`样式，但你是你需要子组件在它的容器外可见。比如，弹窗，悬浮卡，工具提示。
 
-> 注意：当使用 portal 的时候，记住[管理键盘聚焦]()很重要。对于模态弹窗，确保每个人可以和他们交互，通过[WAI-ARIA 模态创作实践]()。
+> 注意：当使用 portal 的时候，记住[管理键盘聚焦](https://reactjs.org/docs/accessibility.html#programmatically-managing-focus)很重要。对于模态弹窗，确保每个人可以和他们交互，通过[WAI-ARIA 模态创作实践](WAI-ARIA Modal Authoring Practices)。
 
 ### 事件冒泡穿过 portal
 尽管一个 portal 可以在 DOM 树的任何地方，它表现的像一个任何其他地方可见普通的 React 子组件。像 context 类似的特性同样起效，无论子组件是否是一个 portal，就像 portal 依旧存在在 React 树中，无论在 DOM 树中的啥地方。

@@ -1,3 +1,4 @@
+[原文地址](https://reactjs.org/docs/hooks-reference.html)
 ### Hooks API Reference
 
 Hooks 是 React 16.8 引入的新内容。它们允许你不写一个类来使用状态和其他 React 功能。
@@ -53,6 +54,18 @@ setState(prevState => {
 另一个选项是`useReducer`，更适合用于管理包含多个子值的状态对象。
 
 
+##### 指定初始值
+
+有两种初始化`useReducer`状态的方式。你可以根据场景选择一种方式。最简单的方式是传递初始状态作为第二参数：
+```
+  const [state, dispatch] = useReducer(
+    reducer,
+    {count: initialCount}
+  );
+```
+
+注意：React 不使用由 Redux 推广的`state = initialState`参数。这个初始化值有时候需要去依赖属性，因此使用 Hook 调用替代。如果你觉得这很强制，你可以调用`useReducer(reducer, undefined, reducer)`去模拟 Redux 的行为，但是这不被鼓励。
+
 ##### 惰性初始化状态
 
 `initialState`参数是在初始化渲染期间使用的状态。在后续渲染中，他被抛弃了。入股初始状态是一个昂贵计算的结果，你可能提供一个函数替代，它只会在初始化渲染被执行：
@@ -64,7 +77,7 @@ const [state, setState] = useState(() => {
 ```
 
 ##### 摆脱状态更新
-如果你更新一个 State Hook 到相同的值作为当前状态，React 将会摆脱，不会渲染子组件或者触发 effect。（React 使用 [Object.is 比较算法]()。）
+如果你更新一个 State Hook 到相同的值作为当前状态，React 将会不会渲染子组件或者触发 effect。（React 使用 [Object.is 比较算法](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description)。）
 
  注意 React 在摆脱之前依旧需要再次渲染指定组件。这不必担心，因为 React 将不会"深入"到树中。如果你在渲染的时候执行昂贵的计算，你可以使用`useMemo`优化他们。
 
@@ -97,9 +110,9 @@ useEffect(() => {
 
 ##### Timing of effects
 
-不像`componentDidMount`和`componentDidUpdate`，传递给`useEffect`的函数在布局和绘制之后触发，在一个延迟事件。这让它适合很多常见的副作用，比如设置监听器和事件处理器，因为大部分累的的工作不应该堵塞浏览器更新屏幕。
+不像`componentDidMount`和`componentDidUpdate`，传递给`useEffect`的函数在布局和绘制之后触发，在一个延迟事件。这让它适合很多常见的副作用，比如设置监听器和事件处理器，因为大部分累的工作不应该堵塞浏览器更新屏幕。
 
-然而，不是所有的 effect 可以被延迟。比如，一个用户可见的 DOM 改变必须在下一次绘制的时候铜壶触发，这样用户不会察觉到视觉上的不一致。（和主动被动事件监听器概念上很像）对于这类的 effect，React 提供一个额外的 Hook 叫做[useLayoutEffect]()。它和`useEffect`有相同的签名，只有在何时触发上有区别。
+然而，不是所有的 effect 可以被延迟。比如，一个用户可见的 DOM 改变必须在下一次绘制的时候同步触发，这样用户不会察觉到视觉上的不一致。（和主动被动事件监听器概念上很像）对于这类的 effect，React 提供一个额外的 Hook 叫做[useLayoutEffect](https://reactjs.org/docs/hooks-reference.html#uselayouteffect)。它和`useEffect`有相同的签名，只有在何时触发上有区别。
 
 尽管`useEffect`推迟到浏览器被绘制，它保证在任何渲染之前触发。React 将总是在开始一个新的更新之前刷新一个前一个渲染的 effect。
 
@@ -123,13 +136,13 @@ useEffect(
 ```
 现在订阅将只会在`props.source`改变的时候创建。
 
-> 注意：如果你使用这个优化，确保数组包含**被 effect 使用的随着时间改变的组件范围的所有值**。否则，你的代码将会引用上一次不新鲜的值。查阅更多关于[怎样处理函数]()并且当[数组值频繁改变的时候做什么]()。
+> 注意：如果你使用这个优化，确保数组包含**被 effect 使用的随着时间改变的组件范围的所有值**。否则，你的代码将会引用上一次不新鲜的值。查阅更多关于[怎样处理函数](https://reactjs.org/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies)并且当[数组值频繁改变的时候做什么](https://reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often)。
 
-> 如果你想要运行一个 effect 并且清理它只有一次（在挂载和卸载），你可以传递一个空数组（`[]`）作为第二个参数。这告诉 React 你的 effect 不依赖 props 和 state 的任何值，所以它不需要去重新执行。这不是一个特殊场景 -- 它直接遵循依赖数组一贯工作方式。
+> 如果你想要只运行和清理一个 effect 一次（在挂载和卸载），你可以传递一个空数组（`[]`）作为第二个参数。这告诉 React 你的 effect 不依赖 props 和 state 的任何值，所以它不需要去重新执行。这不是一个特殊场景 -- 它直接遵循依赖数组一贯工作方式。
 
-> 如果你传递一个空的数组（`[]`），effect 内部的 props 和 state 将总是他们的初始值。尽管传递`[]`作为第二个参数和`componentDidMount`和`componentWillUnMount`思想模式很像，有[更好的解决方案]()去避免频繁重新运行 effect。同时，别忘了 React 延迟执行`useEffect`直到浏览器被绘制，所以做额外的工作不是一个问题。
+> 如果你传递一个空的数组（`[]`），effect 内部的 props 和 state 将总是他们的初始值。尽管传递`[]`作为第二个参数和`componentDidMount`和`componentWillUnMount`思想模式很像，有[更好的](https://reactjs.org/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies)[解决方案](https://reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often)去避免频繁重新运行 effect。同时，别忘了 React 延迟执行`useEffect`直到浏览器被绘制，所以做额外的工作不是一个问题。
 
-> 我们推荐使用[exhaustive-deps]()规则作为我们[eslint-plugin-react-hooks]()包的一部分。它在依赖指定错误的时候警告并建议一个修复。
+> 我们推荐使用[exhaustive-deps](https://github.com/facebook/react/issues/14920)规则作为我们[eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation)包的一部分。它在依赖指定错误的时候警告并建议一个修复。
 
 > 依赖的数组不是作为参数传递。概念上，这是他们所标示的：effect 函数内部引用的每一个值应该出现在依赖数组中。在未来，一个足够该机的编译器可以自动创建这个数组。
 
@@ -139,14 +152,14 @@ const value = useContext(MyContext);
 ```
 接受一个上下文对象（从`React.createContext`返回的值）并且为上下文返回当前上下文的的值。当前上下文的值取决于树中调用组件前面的最近的的`<MyContext.Provider>`的`value`属性。
 
-当组件前面最近的`<MyContext.Provider>`更新，Hook 将会使用传递给`MyContext`最新的上下文`value`触发一个渲染。
+当组件前面最近的`<MyContext.Provider>`更新，Hook 将会使用传递给`MyContext`最新的上下文`value`触发一个渲染。就算一个组件使用[React.memo](https://reactjs.org/docs/react-api.html#reactmemo)或者[shouldComponentUpdate](https://reactjs.org/docs/react-component.html#shouldcomponentupdate)，一个渲染依旧发生在组件使用`useContext`。
 
 不要忘记传递给`useContext`的参数必须是上下文对象本身：
 - **正确**：`useContext(MyContext)`
 - **错误**：`useContext(MyContext.Consumer)`
 - **错误**：`useContext(MyContext.Provider)`
 
-一个组件调用`useContext`将会总是重新渲染，当上下文值改变。如果重新渲染组件是昂贵的，你可以[通过使用记忆优化它]()。
+一个组件调用`useContext`将会总是重新渲染，当上下文值改变。如果重新渲染组件是昂贵的，你可以[通过使用记忆优化它](https://github.com/facebook/react/issues/15156#issuecomment-474590693)。
 
 > 提示：
 > 如果在 Hooks 之前对 context API 很熟悉，`useContext(MyContext)`和类中`static contextTyoe = MyContext`相同，或者`<MyContext.Consumer>`。
@@ -194,11 +207,11 @@ function ThemedButton() {
   );
 }
 ```
-这个例子是为了 hooks 修改，从在[Context Advanced Guide]()的例子，你可以在那里找到更多关于何时和怎样使用 Context 的信息。
+这个例子是为了 hooks 修改，从在[Context Advanced Guide](https://reactjs.org/docs/context.html)的例子，你可以在那里找到更多关于何时和怎样使用 Context 的信息。
 
 ### 额外 Hooks
 
-下面的 Hooks 是前面章节的基本 Hooks 的变体。只在特定边缘场景需要。不要 强调预先学习。
+下面的 Hooks 是前面章节的基本 Hooks 的变体。只在特定边缘场景需要。不要强制预先学习。
 
 #### useReducer
 ```jsx harmony
@@ -206,9 +219,9 @@ const [state, dispatch] = useReducer(reducer, initialArg, init);
 ```
 `useState`的替代。接受一个类型为`(state, action) => newState`的 reducer，并返回当前值和一个`dispatch`方法的对。（如果你对 Redux 很熟悉，你已经知道它是如何工作的了）。
 
-`useReducer`比`useState`更适合，当你有复杂状态逻辑调用多个子值或者当下一个状态依赖前一个的时候。`useReducer`也让你为触发深层更新的组件优化性能，因为[你可以向下传递 dispatch 替代一个 callback]()。
+`useReducer`比`useState`更适合，当你有复杂状态逻辑调用多个子值或者当下一个状态依赖前一个的时候。`useReducer`也让你为触发深层更新的组件优化性能，因为[你可以向下传递 dispatch 替代一个 callback](https://reactjs.org/docs/hooks-faq.html#how-to-avoid-passing-callbacks-down)。
 
-这是`useState`章节的计数器例子，使用 reducer 重写：
+这是[useState](https://reactjs.org/docs/hooks-reference.html#usestate)章节的计数器例子，使用 reducer 重写：
 ```jsx harmony
 const initialState = {count: 0};
 
@@ -279,7 +292,7 @@ function Counter({initialCount}) {
 
 ##### 摆脱 dispatch
 
-如果你从一个 Reducer Hook 返回相同的值作为当前状态，React 将摆脱，不会重新渲染子孙或者触发 effect。（React 使用[Object.is 比较算法]()）。
+如果你从一个 Reducer Hook 返回相同的值作为当前状态，React 将摆脱，不会重新渲染子孙或者触发 effect。（React 使用[Object.is 比较算法](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is#Description)）。
 
 注意 React 可能依旧需要再次渲染指定组件，在摆脱之前。这不需要关心，因为 React 不需要去"深入"树。如果你在渲染的时候执行昂贵的计算，你可以使用`useMemo`优化他们。
 
@@ -292,34 +305,34 @@ const memoizedCallback = useCallback(
   [a, b],
 );
 ```
-返回一个[记忆的]()回调。
+返回一个[记忆的](https://en.wikipedia.org/wiki/Memoization)回调。
 
-传递一个行内回调和一个依赖数组。`useCallback`将返回一个记忆的回调版本，它只有在其中一个依赖改变的时候改变。这很有用每当传递回调去优化依赖引用相同阻止不需要的渲染的子组件（比如，`shouldComponentUpdate`）。
+传递一个行内回调和一个依赖数组。`useCallback`将返回一个记忆的回调版本，它只有在其中一个依赖改变的时候改变。每当传递回调去优化依赖引用相同阻止不需要的渲染的子组件（比如，`shouldComponentUpdate`）的时候很有用。
 
 `useCallback(fn, deps)`和`useMemo(() => fn, deps)`相同。
 
-> 依赖的数组不是作为参数传递给 callback。概念上，这是他们所标示的：callback 函数内部引用的每一个值应该出现在依赖数组中。在未来，一个足够该机的编译器可以自动创建这个数组。
+> 依赖的数组不是作为参数传递给 callback。概念上，这是他们所标示的：callback 函数内部引用的每一个值应该出现在依赖数组中。在未来，一个足够高级的编译器可以自动创建这个数组。
 
-> 我们推荐使用[exhaustive-deps]()规则作为我们[eslint-plugin-react-hooks]()包的一部分。它在依赖指定错误的时候警告并建议一个修复。
+> 我们推荐使用[exhaustive-deps](https://github.com/facebook/react/issues/14920)规则作为我们[eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation)包的一部分。它在依赖指定错误的时候警告并建议一个修复。
 
 #### useMemo
 ```jsx harmony
 const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
 ```
 
-返回一个[记忆的]()值。
+返回一个[记忆的](https://en.wikipedia.org/wiki/Memoization)值。
 
 传递一个"创建"函数和一个数组依赖。`useMemo`将只重新计算记忆的值，当其中一个依赖改变的时候。这个优化帮助在每次渲染避免昂贵的计算。
 
-记住传递给`useMemo`的函数在每次渲染都执行。不要做任何你在喧嚷通常不会做的事情。比如，副作用属于`useEffect`，不是`useMemo`。
+记住传递给`useMemo`的函数在每次渲染都执行。不要做任何你在渲染通常不会做的事情。比如，副作用属于`useEffect`，不是`useMemo`。
 
 如果没有提供数组，一个新的值将会在每次渲染计算。
 
-**你可能依赖 useMemo 作为性能优化，不是一个语义保证**。在外来，React 可能选择"忘记"一些之前记忆的值并在下一次渲染重新计算他们，比如，为屏幕之外的组件释放内存。编写你的代码就算没有`useMemo`也能工作 -- 然后添加它作为性能优化。
+**你可能依赖 useMemo 作为性能优化，不是一个语义保证**。在未来，React 可能选择"忘记"一些之前记忆的值并在下一次渲染重新计算他们，比如，为屏幕之外的组件释放内存。编写你的代码就算没有`useMemo`也能工作 -- 然后添加它作为性能优化。
 
->> 依赖的数组不是作为参数传递给函数。概念上，这是他们所标示的：callback 函数内部引用的每一个值应该出现在依赖数组中。在未来，一个足够该机的编译器可以自动创建这个数组。
+> 依赖的数组不是作为参数传递给函数。概念上，这是他们所标示的：callback 函数内部引用的每一个值应该出现在依赖数组中。在未来，一个足够该机的编译器可以自动创建这个数组。
  
- > 我们推荐使用[exhaustive-deps]()规则作为我们[eslint-plugin-react-hooks]()包的一部分。它在依赖指定错误的时候警告并建议一个修复。
+> 我们推荐使用[exhaustive-deps](https://github.com/facebook/react/issues/14920)规则作为我们[eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation)包的一部分。它在依赖指定错误的时候警告并建议一个修复。
 
 #### useRef
 ```jsx harmony
@@ -327,7 +340,7 @@ const refContainer = useRef(initialValue);
 ```
 `useRef`返回一个可变的对象，它的`.current`属性初始化为传递的参数（`initialValue`）。返回的对象将会在整个组件的生命周期持久化。
 
-一个常见常见是命令式访问一个子组件：
+一个常见场景是命令式访问一个子组件：
 ```jsx harmony
 function TextInputWithFocusButton() {
   const inputEl = useRef(null);
@@ -345,14 +358,14 @@ function TextInputWithFocusButton() {
 ```
 基本上，`useRef`类似一个"box"，可以保存一个可变值在它的`.current`属性。
 
-你可能对 ref [访问 DOM]() 的方式很熟悉。如果你使用`<div ref={myRef} />`传递一个 ref 对象到 React,React 将设置`.current`属性到对应的 DOM 节点，无论何时节点发生改变。
+你可能对 ref [访问 DOM](https://reactjs.org/docs/refs-and-the-dom.html) 的方式很熟悉。如果你使用`<div ref={myRef} />`传递一个 ref 对象到 React，React 将设置`.current`属性到对应的 DOM 节点，无论何时节点发生改变。
 
 
-然而，`useRef()`比`ref`属性还有用。它是[保存可变值的技巧]()，类似你在类中使用的实例域。
+然而，`useRef()`比`ref`属性还有用。它是[保存可变值的技巧](https://reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables)，类似你在类中使用的实例域。
 
 这起作用是因为`useRef()`创建一个普通 JavaScript 对象。`useRef()`和你自己创建一个`{current: ...}`对象的不同在于`useRef`在每次渲染都给你相同的 ref 对象。
 
-记住，`useRef`不会在内容改变的时候提示你。操作`.current`属性不会触发一个重新渲染。如果你想要执行代码，当 React 绑定或者解绑一个 ref 到 DOM 节点，你可能想要使用[callback ref]()替代。
+记住，`useRef`不会在内容改变的时候提示你。操作`.current`属性不会触发一个重新渲染。如果你想要执行代码，当 React 绑定或者解绑一个 ref 到 DOM 节点，你可能想要使用[callback ref](https://reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node)替代。
 
 #### useImperativeHandle
 ```jsx harmony
@@ -385,12 +398,12 @@ FancyInput = forwardRef(FancyInput);
 
 > 如果你使用服务端渲染，记住`useLayoutEffect`和`useEffect`直到 JavaScript 下载完成才会运行。这就是为什么当服务端渲染组件包含`useLayoutEffect`的时候 React 警告。为了修复这个，移动逻辑到`useEffect`(如果它对第一次渲染是必须的)，或延迟显示组件，直到客户端渲染（如果 HTML 看起来是破损的，直到`useLayoutEffect`运行）。
 
-> 为了从 服务端渲染的 HTML 排除一个需要布局作用的组件，使用`showChild && <Child />`条件话渲染组件并且使用`useEffect(() => { setShowChild(true); })`延迟显示它。这种方式，UI 在 hydration 之前不会出现破损。
+> 为了从服务端渲染的 HTML 排除一个需要布局作用的组件，使用`showChild && <Child />`条件话渲染组件并且使用`useEffect(() => { setShowChild(true); })`延迟显示它。这种方式，UI 在 hydration 之前不会出现破损。
 
 #### useDebugValue
 `useDebugValue`可以用于在 React DevTools 为自定义 Hooks 显示一个标签。
 
-比如，描述在"[创建你自己的 Hooks]"的`useFriendStatus`自定义 Hook。
+比如，描述在"[创建你自己的 Hooks](https://reactjs.org/docs/hooks-custom.html)"的`useFriendStatus`自定义 Hook。
 ```jsx harmony
 function useFriendStatus(friendID) {
   const [isOnline, setIsOnline] = useState(null);

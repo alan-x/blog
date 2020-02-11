@@ -1,10 +1,11 @@
+[原文地址](https://reactjs.org/docs/hooks-rules.html)
 ### Building Your Own Hooks
 
 Hooks 是 React 16.8 引入的新内容。它们允许你不写一个类来使用状态和其他 React 功能。
 
 创建你自己的 Hooks 让你提取组件逻辑到可重用的函数。
 
-当我们学习关于使用 Effect Hook，我们看到这个从聊天应用来的组件显示一个信息，只是一个朋友是否在线或者离线：
+当我们学习关于使用 [Effect Hook](https://reactjs.org/docs/hooks-effect.html#example-using-hooks-1)，我们看到这个从聊天应用来的组件显示一个信息，显示一个朋友是否在线或者离线：
 ```jsx harmony
 import React, { useState, useEffect } from 'react';
 
@@ -28,7 +29,7 @@ function FriendStatus(props) {
   return isOnline ? 'Online' : 'Offline';
 }
 ```
-现在，假设我们的聊天应用也有一个联系人列表，我们想要使用绿色渲染在线用户的名字。我们可以扶着和张贴同样的逻辑到我们的`FriendListItem`组件，但是它不理想：
+现在，假设我们的聊天应用也有一个联系人列表，我们想要使用绿色渲染在线用户的名字。我们可以负责和粘贴同样的逻辑到我们的`FriendListItem`组件，但是它不理想：
 ```jsx harmony
 import React, { useState, useEffect } from 'react';
 
@@ -55,13 +56,13 @@ function FriendListItem(props) {
 ```
 相反，我们希望在`FriendStatus`和`FrientListItem`分享这个逻辑。
 
-通常在 React 中，我们有两个流行的方式在组件之间去分享状态逻辑：render props 和 higher-order components。我们看看 Hooks 如何解决相同的问题，但是不需要强制你去添加更多的组件到树中。
+通常在 React 中，我们有两个流行的方式在组件之间去分享状态逻辑：[render props](https://reactjs.org/docs/render-props.html) 和 [higher-order components](https://reactjs.org/docs/higher-order-components.html)。我们看看 Hooks 如何解决相同的问题，但是不需要强制你去添加更多的组件到树中。
 
 ### 抽取一个自定义 Hook
 
-当我们想要在 JavaScript 函数之间分享逻辑，我们抽取到第三个函数。组件和 Hooks 都是函数，所以这丢他们有有用。
+当我们想要在 JavaScript 函数之间分享逻辑，我们抽取到第三个函数。组件和 Hooks 都是函数，所以这对他们有用。
 
-**一个自定义 Hook 是一个 JavaScript 函数，它的名字以"use"开头并且可能调用其他 Hooks。**比如，下面的`useFriendStatus`是我们的第一个自定义 Hook。
+**一个自定义 Hook 是一个 JavaScript 函数，它的名字以"use"开头并且可能调用其他 Hooks。** 比如，下面的`useFriendStatus`是我们的第一个自定义 Hook。
 ```jsx harmony
 import React, { useState, useEffect } from 'react';
 
@@ -83,9 +84,9 @@ function useFriendStatus(friendID) {
 }
 ```
 
-前面没有新的东西在里面 -- 逻辑是从前面的组件复制的。就像在一个续建内，确保只有非条件话的在你的自定义 Hook 调用其他的 Hook。
+前面没有新的东西在里面 -- 逻辑是从前面的组件复制的。就像在一个组件内，确保只有非条件话的在你的自定义 Hook 调用其他的 Hook。
 
-不像一个 React 组件，一个自定义 Hook 不需要去有一个前面特殊的前面，我们可以决定它采取什么参数，和什么，如果有，它应该返回。换句话说，它就先给一个普通的函数。它的名字应该总是使用`use`开头，这样你可以一眼看出应用的 Hook 的规则。
+不像一个 React 组件，一个自定义 Hook 不需要去有一个特殊的签名，我们可以决定它采取什么参数，返回什么，如果有。换句话说，它就像一个普通的函数。它的名字应该总是使用`use`开头，这样你可以一眼看出应用的 [Hook 的规则](https://reactjs.org/docs/hooks-rules.html)。
 
 我们`useFriendStatus` Hook 的目标是去订阅我们朋友的状态。这是为什么它需要`friedndID`作为一个参数，并且返回这个朋友是否在线：
 ```jsx harmony
@@ -127,9 +128,9 @@ function FriendListItem(props) {
 
 ```
 
-**这个代码和原始的例子一样吗？** 是的，它以相同的方式工作。如果你更近一点看，你会主要到我们没有改变任何行为。我们做的只是将相同的普通代码从两个函数抽取到一个分离的函数。**自定义 Hook 是一个约定，自然遵循了 Hooks 的设计，而不是一个 React 功能。**
+**这个代码和原始的例子一样吗？** 是的，它以相同的方式工作。如果你更近一点看，你会注意到我们没有改变任何行为。我们做的只是将相同的普通代码从两个函数抽取到一个分离的函数。**自定义 Hook 是一个约定，自然遵循了 Hooks 的设计，而不是一个 React 功能。**
 
-**我必须把我的自定义 Hooks 以"use"开头命名吗？** 请这么做。这个约定是非常重要的。没有他，我们无法自动检查违背 Hooks 规则，因为我们无法告诉如果一个确认的函数内部包含 Hooks 调用。
+**我必须把我的自定义 Hooks 以"use"开头命名吗？** 请这么做。这个约定是非常重要的。没有他，我们无法自动检查违背 [Hooks 规则](https://reactjs.org/docs/hooks-rules.html)，因为我们无法告诉如果一个确认的函数内部包含 Hooks 调用。
 
 **两个组件使用相同 Hook 分享状态吗？** 不。自定义 Hooks 是重用状态逻辑的机制（比如设置一个定过并记住当前值），但是每次你使用一个自定义 Hook，所有内部的的状态和 effect 都是完全独立的。
 
@@ -139,7 +140,7 @@ function FriendListItem(props) {
 
 因为 Hooks 是函数，我们可以在他们之间传递信息。
 
-为了描述这个，我们将使用从我们假设的聊天李忠中的其他组件。这是一个聊天消息接收选择器，显示当前选择的嗯有是否在线：
+为了描述这个，我们将使用从我们假设的聊天应用中的其他组件。这是一个聊天消息接收选择器，显示当前选择的朋友是否在线：
 ```jsx harmony
 const friendList = [
   { id: 1, name: 'Phoebe' },
@@ -183,7 +184,7 @@ function ChatRecipientPicker() {
 
 不要过早添加抽象。现在函数组件可以做的更多，可能函数组件的平均长度会变长。这是很正常的 -- 不要觉得你应该分离他到 Hooks。但是我们也鼓励你去开始关注场景，一个自定义 Hook 可以隐藏复杂的逻辑在一个简单接口，或者帮助解决混乱的额组件。
 
-比如，肯恩给你需要一个浮渣的组件包含很多本地状态，被管理在一个 ad-hoc 更简单，所以你可能更偏向于协程一个 Redux reducer：
+比如，可能给你需要一个复杂的组件包含很多本地状态，被管理在一个 ad-hoc 更简单，所以你可能更偏向于协同一个 [Redux](https://redux.js.org/) reducer：
 ```jsx harmony
 function todosReducer(state, action) {
   switch (action.type) {
@@ -199,7 +200,7 @@ function todosReducer(state, action) {
 }
 ```
 
-Reducer 独立测试非常方便，可以伸缩的表示复杂的更新逻辑。你可以更深的分离他们到更小的 reducer，如果需要。然而，你可能享受使用 React 本地状态的好处，或者可能不想要去安装其他库。
+Reducer 独立测试非常方便，可以伸缩的表示复杂的更新逻辑。如果需要，你可以更深的分离他们到更小的 reducer。然而，你可能享受使用 React 本地状态的好处，或者可能不想要去安装其他库。
 
 所以，如果我们可以写一个`useReducer` Hook 使用 reducer 让我们管理组件的本地状态？一个简单的版本可能看起来像这样：
 ```jsx harmony
@@ -230,4 +231,4 @@ function Todos() {
 
 ```
 
-在浮渣组件内使用 reducer 管理本地状态是一个足够常见的，我们创建了`useReducer` Hook 到 React。你可以和其他内置 Hooks 在 Hooks API reference 找到。
+在复杂组件内使用 reducer 管理本地状态是足够常见的，我们创建了`useReducer` Hook 到 React。你可以在 [Hooks API reference](https://reactjs.org/docs/hooks-reference.html) 找到和其他内置 Hooks 一起的例子。

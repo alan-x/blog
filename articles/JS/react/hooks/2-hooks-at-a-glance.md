@@ -1,17 +1,18 @@
+ [原文地址](https://reactjs.org/docs/hooks-overview.html)
 ### Hooks at a Glance
 
 Hooks 是 React 16.8 新添加的功能。他们让你不写类就能使用状态和其他 React 功能。
 
-Hooks 是向后兼容的。这个页面为有经验的 React 用户提供了一个关于 Hooks 的概览。这是一个快速概览。如果你感觉困惑，查看像这样的黄色盒子：
+Hooks 是[向后兼容的](https://reactjs.org/docs/hooks-intro.html#no-breaking-changes)。这个页面为有经验的 React 用户提供了一个关于 Hooks 的概览。这是一个快速概览。如果你感觉困惑，查看像这样的黄色盒子：
 
 > **详细解释**
-> 阅读动机去学习为什么在 React 中引入 Hooks
+> 阅读[动机](https://reactjs.org/docs/hooks-intro.html#motivation)去学习为什么在 React 中引入 Hooks
 
 ↑↑↑ 每一个章节使用像这样的黄色盒子结束。他们链接到详细的解释。
 
 ### 📌 State Hook
 
-这个例子渲染一个 counter。当你点击按钮，增加值：
+这个例子渲染一个计数器。当你点击按钮，增加值：
 ```jsx harmony
 import React, { useState } from 'react';
 
@@ -30,7 +31,7 @@ function Example() {
 }
 ```
 
-这里，`useState`是一个 Hook（我们将在稍后讨论这意味着什么）。我们在一个函数组件的内部调用它去添加一个本地状态。React 将会在每次重新渲染的时候保持这个状态。`useState`返回一对：当前状态值和一个让你更新它的函数。你可以在事件处理器或者其他调用这个函数。它和类的`this.setState`很想，除了它不合并新的和旧的状态。（我们将会在 Using the State Hook 展示一个例子来比较`userState`和`this.state`）。
+这里，`useState`是一个 Hook（我们将在稍后讨论这意味着什么）。我们在一个函数组件的内部调用它去添加一个本地状态。React 将会在每次重新渲染的时候保持这个状态。`useState`返回一对：当前状态值和一个让你更新它的函数。你可以在事件处理器或者其他调用这个函数。它和类的`this.setState`很像，除了它不合并新的和旧的状态。（我们将会在 [Using the State Hook](https://reactjs.org/docs/hooks-state.html) 展示一个例子来比较`userState`和`this.state`）。
 
 
 `useState`唯一的参数是初始状态。在前面的例子中，它是`0`是因为我们的计数器从 0 开始。注意，不像`this.state`，这里的状态不必是个对象 - 尽管如果你需要，它可以是。初始化状态参数只有在第一次渲染使用。
@@ -89,7 +90,7 @@ function Example() {
 }
 ```
 
-当你调用`useEffect`，你在告诉 React 执行你的"作用"函数，在冲刷你的改变到 DOM。作用声明在组件内部，这样他们可以访问它的组件和状态。默认，React 在每一次渲染之后执行作用 -- 包括第一次执行。（我们将在 Using the Effect Hook 讨论更多和类声明周期的比较。）
+当你调用`useEffect`，在刷新你的改变到 DOM 之后，你告诉 React 执行你的"作用"函数。作用声明在组件内部，这样他们可以访问它的组件和状态。默认，React 在每一次渲染之后执行作用 -- 包括第一次执行。（我们将在 [Using the Effect Hook](https://reactjs.org/docs/hooks-effect.html) 讨论更多和类声明周期的比较。）
 
 作用可能也可选的指定之后怎样去"清理"他们，通过返回一个函数。比如，这个组件使用一个作用去订阅一个朋友的在线状态，并通过取消订阅清理：
 ```jsx harmony
@@ -119,7 +120,7 @@ function FriendStatus(props) {
 
 在这个例子中，React 将会在组件卸载的时候取消订阅我们的`ChatAPI`，同时在后续渲染的时候再次执行作用。（如果你想要，有一个方式去告诉 React 跳过重新订阅，如果我们传递给`ChartAPI`测`props.friend.id`没有改变。）
 
-就像`userState`，你可以使用在一个组件中多次使用组件：
+就像`useState`，你可以在一个组件中多次使用一个作用：
 ```jsx harmony
 function FriendStatusWithCounter(props) {
   const [count, setCount] = useState(0);
@@ -141,17 +142,18 @@ function FriendStatusWithCounter(props) {
   // ...
 ```
 > 详细解释
-> 你可以在一个独立的页面学习更多关于`useEffect`：Using the Effect Hook。
+> 你可以在一个独立的页面学习更多关于`useEffect`：[Using the Effect Hook](https://reactjs.org/docs/hooks-effect.html)。
 
 
-### ✌️ Rules of Hooks
+### ✌️ Hooks 的规则
 
 Hooks 是 JavaScript 函数，但是他们有两个额外规则约束：
+
 - 只**在顶层**调用 Hooks。不要在循环，条件，或者嵌套函数在调用 Hooks。
 
 - 只**在 React 函数组件**内调用 Hooks。不要在常规 JavaScript 函数内调用 Hooks。（只有唯一一个调用 Hooks 的有效地方 -- 你自己的自定义 Hooks。我们将在稍后学习他们。）
 
-我们提供一个 linter plugin 去自动强制这些规则。我们理解这些规则可能看起来限制或者让人困惑，但是但是他们对于创建 Hooks 非常有用。
+我们提供一个 [linter plugin](https://www.npmjs.com/package/eslint-plugin-react-hooks) 去自动强制这些规则。我们理解这些规则可能看起来限制或者让人困惑，但是但是他们对于创建 Hooks 非常有用。
 
 > 详细解释
 > 你可以在独立的页面学习更多关于这些规则：Rule Of Hooks。
@@ -219,7 +221,7 @@ function FriendListItem(props) {
 
 ### 🔌 Other Hooks
 
-还有一些不常用的内置钩子可能非常有用。比如，`useContext`让你订阅 React 上下文，不需要引入嵌套：
+还有一些不常用的内置钩子可能非常有用。比如，[useContext](https://reactjs.org/docs/hooks-reference.html#usecontext)让你订阅 React 上下文，不需要引入嵌套：
 
 ```jsx harmony
 function Example() {
@@ -229,7 +231,7 @@ function Example() {
 }
 ```
 
-`useReducer`让你使用一个 reducer 管理复杂对象的本地状态：
+[useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer)让你使用一个 reducer 管理复杂对象的本地状态：
 ```jsx harmony
 function Todos() {
   const [todos, dispatch] = useReducer(todosReducer);
@@ -237,12 +239,12 @@ function Todos() {
 ```
 
 > 详细解释
-> 你可以在独立页面学习到更多关于内置 Hooks：Hooks API Reference。
+> 你可以在独立页面学习到更多关于内置 Hooks：[Hooks API Reference](https://reactjs.org/docs/hooks-reference.html)。
 
 ### 下一步
 
-哦，真快！如果没有太大的意义或者你想要更详细的学习，你可以阅读下一个页面，从 State Hooks 文档开始。
+哦，真快！如果没有太大的意义或者你想要更详细的学习，你可以阅读下一个页面，从 [State Hooks](https://reactjs.org/docs/hooks-state.html) 文档开始。
 
-你也可以查阅 Hooks API 引用和 Hooks FAQ。
+你也可以查阅 [Hooks API 索引](https://reactjs.org/docs/hooks-reference.html) 和 [Hooks FAQ](https://reactjs.org/docs/hooks-faq.html)。
 
-最后，不要错过介绍页面，它解释为什么我们添加 Hooks 并且我们怎样和类一起开始用他们 -- 不重写我们的应用。
+最后，不要错过[介绍页面](https://reactjs.org/docs/hooks-intro.html)，它解释为什么我们添加 Hooks 并且我们怎样和类一起开始用他们 -- 不重写我们的应用。

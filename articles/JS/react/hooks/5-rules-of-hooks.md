@@ -1,23 +1,24 @@
-### Using the Effect Hook
+[原文地址](https://reactjs.org/docs/hooks-rules.html)
+### Rule of Hooks
 
 Hooks 是 React 16.8 引入的新内容。它们允许你不写一个类来使用状态和其他 React 功能。
 
-Hooks 是 JavaScript 函数，但是使用他们的时候你需要遵循两个规则。我们提供一个 linter plugin 去自动推行这些规则：
+Hooks 是 JavaScript 函数，但是使用他们的时候你需要遵循两个规则。我们提供一个 [linter plugin](https://www.npmjs.com/package/eslint-plugin-react-hooks) 去自动推行这些规则：
 
 ### 只有在顶级调用 Hooks
 
-**不要在循环，条件，或者嵌套函数内调用 loops。** 相反，总是在你的 React 函数顶部调用 Hooks。通过遵循这个规则，你确保 Hooks 在每一次组件渲染都以相同的顺序调用。这是 React 允许多个`useState`和`useEffect`调用正确保留。（如果你好奇，我们将会在下面更加深入解释）
+**不要在循环，条件，或者嵌套函数内调用 loops。** 相反，总是在你的 React 函数顶部调用 Hooks。通过遵循这个规则，你确保 Hooks 在每一次组件渲染都以相同的顺序调用。这是 React 允许多个`useState`和`useEffect`调用正确保留。（如果你好奇，我们将会在[下面](https://reactjs.org/docs/hooks-rules.html#explanation)更加深入解释）
 
 ### 只有在 React Function 内调用 Hooks
 
 **不要在常规 JavaScript 函数内调用 Hooks。** 相反，你可以：
 - 在 React 函数组件内调用 Hooks
-- 在自定义 Hooks 内调用 Hooks（我们将在下一个页面学习他们）
+- 在自定义 Hooks 内调用 Hooks（我们将在[下一个页面](https://reactjs.org/docs/hooks-custom.html)学习他们）
 
 通过遵循这个规则，你确保一个组件中的所有状态逻辑都在源代码中清晰可见。
 
 ### ESLint plugin
-我们发布了一个 ESLint 插件叫做 eslint-plugin-react-hooks，推行这两个规则。你可以添加插件到你的项目，如果你去尝试它：
+我们发布了一个 ESLint 插件叫做 [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks)，推行这两个规则。你可以添加插件到你的项目，如果你去尝试它：
 ```jsx harmony
 npm install eslint-plugin-react-hooks --save-dev
 ```
@@ -36,13 +37,13 @@ npm install eslint-plugin-react-hooks --save-dev
 }
 ```
 
-在未来，我们希望去包含这个插件到 Create React App 和相同的工具箱。
+在未来，我们希望去包含这个插件到 [Create React App](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) 和相同的工具箱。
 
-**现在你可以跳到下一个解释怎样编写你自己的 Hooks 页面**。在这个页面，我们将继续解释这些规则背后的原因。
+**现在你可以跳到下一个页面解释怎样编写你[自己的 Hooks](https://reactjs.org/docs/hooks-custom.html)**。在这个页面，我们将继续解释这些规则背后的原因。
 
 ### 解释
 
-就像我们前面学到的，我们可以在一个组件内使用多个 State 或者 Effect Hook：
+就像我们[前面学到的](https://reactjs.org/docs/hooks-state.html#tip-using-multiple-state-variables)，我们可以在一个组件内使用多个 State 或者 Effect Hook：
 ```jsx harmony
 function Form() {
   // 1. Use the name state variable

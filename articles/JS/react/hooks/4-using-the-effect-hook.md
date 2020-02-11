@@ -1,7 +1,7 @@
+[原文地址](https://reactjs.org/docs/hooks-effect.html)
 ### Using the Effect Hook
 
 Hooks 是 React 16.8 引入的新内容。它们允许你不写一个类来使用状态和其他 React 功能。
-
 
 Effect Hook 让你在函数组件内执行副作用：
 
@@ -235,7 +235,7 @@ function FriendStatus(props) {
 
 Effect Hook 使用一个单独的 API 统一两个场景。
 
-**如果你对 Effect Hook 如何工作有点把我，或者如果你感觉不知所措，你可以现在跳到下一个关于 Hooks 的规则页面。**
+**如果你对 Effect Hook 如何工作有点把握，或者如果你感觉不知所措，你可以现在跳到下一个关于 Hooks 的规则页面。**
 
 ### 使用 effect 的提示
 
@@ -305,7 +305,7 @@ function FriendStatusWithCounter(props) {
 }
 ```
 
-**Hooks 让我们基于他们所做分离代码**，而不是生命周期名。React 将会应用这个组件的每一个副作用，以他们被指定的顺序。
+**Hooks 让我们基于他们所做分离代码**，而不是生命周期名。React 将会以他们被指定的顺序，应用这个组件的每一个副作用。
 
 ### 解释：为什么 effect 在每一次更新都执行
 
@@ -328,7 +328,7 @@ function FriendStatusWithCounter(props) {
     );
   }
 ```
-但是组件在屏幕上的时候名，如果`friend 属性发生变化会发生什么`？我们的组件将会继续显示一个不同朋友的在线状态。这是一个 bug。我们也导致一个内存泄漏或者奔溃，在卸载的时候使用错误的调用取消订阅。
+但是组件在屏幕上的时候，如果`friend 属性发生变化会发生什么`？我们的组件将会继续显示一个不同朋友的在线状态。这是一个 bug。我们也导致一个内存泄漏或者奔溃，在卸载的时候使用错误的调用取消订阅。
 
 在一个类组件，我们需要添加`componentDidUpdate`去处理这个场景：
 ```jsx harmony
@@ -373,9 +373,9 @@ function FriendStatus(props) {
     };
   });
 ``` 
-它没有遇到这个 bug。（但是我们也没鱼哦做任何改变。）
+它没有遇到这个 bug。（但是我们也没有做任何改变。）
 
-没有特殊的代理去处理更新，因为`useEffect`默认处理他们。它清理前一个 effect 在应用下一个 effect 之前。为了指出这个，这个组件会随着时间产生一系列的订阅和取消订阅调用。
+没有特殊的代码去处理更新，因为`useEffect`默认处理他们。它在应用下一个 effect 之前清理前一个 effect。为了指出这个，这个组件会随着时间产生一系列的订阅和取消订阅调用。
 ```jsx harmony
 // Mount with { friend: { id: 100 } } props
 ChatAPI.subscribeToFriendStatus(100, handleStatusChange);     // Run first effect
@@ -392,7 +392,7 @@ ChatAPI.subscribeToFriendStatus(300, handleStatusChange);     // Run next effect
 ChatAPI.unsubscribeFromFriendStatus(300, handleStatusChange); // Clean up last effect
 ```
 
-这个行为确保默认一致性并防止类中因为缺少更新逻辑常见的 bug。
+这个行为确保默认一致性并防止类中因为缺少更新逻辑导致的常见的 bug。
 
 
 ### 提示：通过跳过 effect 优化性能
@@ -412,7 +412,7 @@ useEffect(() => {
   document.title = `You clicked ${count} times`;
 }, [count]); // Only re-run the effect if count changes
 ```
- 在前面的例子中，我们传递`[ count]`作为第二参数。这意味着啥？如果`count`是`5`，并且我们的组件重新渲染的时候`count`依旧是`5`，React 将会比较前一次渲染的`[5]`和下一次渲染的`[5]`。因为数组中所有的项都是相同的（`5 === 5`），React 将会跳过 effect。这是我们的优化。
+ 在前面的例子中，我们传递`[ count ]`作为第二参数。这意味着啥？如果`count`是`5`，并且我们的组件重新渲染的时候`count`依旧是`5`，React 将会比较前一次渲染的`[5]`和下一次渲染的`[5]`。因为数组中所有的项都是相同的（`5 === 5`），React 将会跳过 effect。这是我们的优化。
  
  当我们渲染的时候`count`更新为`6`，React 将会比较前一次渲染`[5]`数组中的项和下一次渲染`[6]`中的项。如果有多个项在数组中，React 将会重新执行 effect，就算他们只有一项不同。
  
@@ -432,19 +432,19 @@ useEffect(() => {
 在未来，第二个参数可能通过构建时转化被自动添加。
 
 > 注意
-> 如果你使用这个优化，确保数组包含组件范围的所有被 effect 使用的随着时间改变值（比如 props 和 state）。否则，你的代码将会从前一次渲染引用不新鲜的值。了解更多关于怎样处理函数和当数组改变太频繁的时候这么做。
+> 如果你使用这个优化，确保数组包含组件范围的所有被 effect 使用的随着时间改变值（比如 props 和 state）。否则，你的代码将会从前一次渲染引用不新鲜的值。了解更多关于怎样[处理函数](https://reactjs.org/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies)和[当数组改变太频繁的时候怎么做](https://reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often)。
 
-> 如果你想要执行一个 effect 和清理它只有一次（在挂载和卸载），你可以传递一个空的数组(`[]`)作为第二个参数。这告诉 React 你的 effect 不依赖任何 props 和 state 中的值，所以它不需要重新执行。这不是一个特例 -- 它遵循依赖的数组的工作原理。
+> 如果你想要执行和清理一个 effect 只有一次（在挂载和卸载），你可以传递一个空的数组(`[]`)作为第二个参数。这告诉 React 你的 effect 不依赖任何 props 和 state 中的值，所以它不需要重新执行。这不是一个特例 -- 它遵循依赖的数组的工作原理。
 
-> 如果你传递一个空数组（`[]`），effect 内的 props 和 state 将会总是有他们的初始值。当传递`[]`作为第二个参数和`componentDidMount`和`componentDidUmmount` 模型很像，通常有更好的解决方案去避免重新运行 effect 太频繁。同样，不哟啊忘记 React 延迟运行`useEffect`，知道浏览器被绘制，所以额外工作工作不是啥问题。
+> 如果你传递一个空数组（`[]`），effect 内的 props 和 state 将会总是有他们的初始值。当传递`[]`作为第二个参数和`componentDidMount`和`componentDidUmmount` 模型很像，通常有[更好](https://reactjs.org/docs/hooks-faq.html#is-it-safe-to-omit-functions-from-the-list-of-dependencies)的[解决方案](https://reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often)去避免重新运行 effect 太频繁。同样，不要忘记 React 延迟运行`useEffect`，直到浏览器被绘制，所以额外工作不是啥问题。
 
-> 我们推荐使用 exhaustive-deps 规则作为我们 eslint-plugin-react-hooks 包的一部分。它在依赖指定错误的时候警告并提示修复。
+> 我们推荐使用 [exhaustive-deps](https://github.com/facebook/react/issues/14920) 规则作为我们 [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks#installation) 包的一部分。它在依赖指定错误的时候警告并提示修复。
 
 
 ### 下一步
 
-祝贺！这是一个长页面，但是希望在结束的时候，你所有关于 effect 的问题都被回答。你已经学了 State Hook 和 Effect Hook，你可以结合他们使用做很多事情。他们覆盖类的大部分用力 -- 如果他们没有，你可能找到有帮助的额外的 Hooks。
+祝贺！这是一个长页面，但是希望在结束的时候，你所有关于 effect 的问题都被回答。你已经学了 State Hook 和 Effect Hook，你可以结合他们使用做很多事情。他们覆盖类的大部分用力 -- 如果他们没有，你可能找到有帮助的[额外的 Hooks](https://reactjs.org/docs/hooks-reference.html)。
 
-我们也开始看到 Hooks 如何解决我们动机中标示出的问题。我们看到 effect 清理如何避免`componentDidUpdate`和`componentWillUnmount`中的重复，让相关代码更接近，帮助我们避免 bug。我们也看到我们如何通过他们的目的分离 effect，这是我们在类中无法做到的。
+我们也开始看到 Hooks 如何解决我们[动机中](https://reactjs.org/docs/hooks-intro.html#motivation)标示出的问题。我们看到 effect 清理如何避免`componentDidUpdate`和`componentWillUnmount`中的重复，让相关代码更接近，帮助我们避免 bug。我们也看到我们如何通过他们的目的分离 effect，这是我们在类中无法做到的。
 
-在这个时候，你可能疑惑 Hooks 是如何工作的。React 是怎么知道哪一个`useState`调用代表哪一个状态变量，美每一次重新渲染？React 在每一次更新怎么"匹配"前一个和下一个 effect？**在下一个页面，我们将会学校以关于 Hooks 的规则 -- 他们是 Hooks 工作的关键。**
+在这个时候，你可能疑惑 Hooks 是如何工作的。React 是怎么知道哪一个`useState`调用代表哪一个状态变量，每一次重新渲染？React 在每一次更新怎么"匹配"前一个和下一个 effect？**在下一个页面，我们将会学校以关于 Hooks 的规则 -- 他们是 Hooks 工作的关键。**

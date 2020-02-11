@@ -1,8 +1,9 @@
+[原文地址](https://reactjs.org/docs/hooks-state.html)
 ### Using the State Hook
 
 Hooks 是 React 16.8 新添加的功能。他们让你不写类就能使用状态和其他 React 功能。
 
-介绍页面使用这个例子去熟悉 Hooks：
+[介绍页面](https://reactjs.org/docs/hooks-intro.html)使用这个例子去熟悉 Hooks：
 ```jsx harmony
 import React, { useState } from 'react';
 
@@ -20,11 +21,11 @@ function Example() {
   );
 }
 ```
-我们开始学习 Hooks 通过比较这个代码和相同的类例子。
+我们通过比较这个代码和相同的类例子开始学习 Hooks。
 
 ### 相同的类例子
 
-如果你曾在 React 中使用 class，代码应该很熟悉：
+如果你曾在 React 中使用 class，这段代码应该很熟悉：
 ```jsx harmony
 class Example extends React.Component {
   constructor(props) {
@@ -48,7 +49,7 @@ class Example extends React.Component {
 ```
 状态以`{ count: 0 }`开始，当用户点击按钮，通过调用`this.setState()`我们增加`state.count`。我们将在整个页面中使用这个类的片段。
 
-> 注意：你可能想为啥这里我们使用一个计数器替代更加真实的例子。这是帮助我们聚焦 API，当我们还在使用 Hooks 创建我们的第一步。
+> 注意：你可能想为什么这里我们使用一个计数器替代更加真实的例子。这是帮助我们聚焦 API，当我们还在使用 Hooks 创建我们的第一步。
 
 ### Hooks and Function Components
  
@@ -68,7 +69,7 @@ function Example(props) {
 ```
 你可能已经知道这是"无状态组件"。我们现在引入使用 React 状态的能力，所以我们更偏向于叫做"函数组件"。
 
-Hooks **无法**在类内部工作。但是你你可以使用他们替代编写类。
+Hooks **无法**在类内部工作。但是你可以使用他们替代编写类。
 
 #### What's a Hook
 
@@ -84,7 +85,7 @@ function Example() {
 
 **什么时候使用 Hook？** 如果你写一个函数组件，你意识到你需要添加一些状态，在之前，你需要转化它为一个类。现在你可以在已经存在的函数组件中使用一个 Hook。我们将马上要去这么做！
 
-> 注意：关于在一个组件内你可以和不可以使用 Hooks 有一些特殊的规则。我们将会在 Rule of Hooks 学到他们。
+> 注意：关于在一个组件内你是否可以使用 Hooks 有一些特殊的规则。我们将会在 [Rule of Hooks](https://reactjs.org/docs/hooks-rules.html) 学到他们。
 
 ### 声明一个状态变量
 
@@ -111,7 +112,7 @@ function Example() {
 
 **我们传递啥作为 useState 的参数？** `useState()`唯一的参数是初始状态。和类不同，状态不必是个对象。我们可以保存一个数字或者字符串，如果我们只需要这个。在我们的例子中，我们值要一个数字，表示用户点击的次数，所以为我们的变量传递`0`作为初始状态。（如果我们想要存储两个不同的值在状态中，我们可以调用`useState()`两次。）
 
-**useState 返回啥？**它返回一对值：当前状态和更新它的函数。这就是为什么我们写`const [count, setCount] = useState()`。这和在类中的`this.state.count`和`this.setState`，除了你在一个对中获取他们。如果你对我们使用的语法不熟悉，我们将在这个页面的底部回顾它。
+**useState 返回啥？** 返回一对值：当前状态和更新它的函数。这就是为什么我们写`const [count, setCount] = useState()`。这和在类中的`this.state.count`和`this.setState`类似，除了你在一个对中获取他们。如果你对我们使用的语法不熟悉，我们将在这个页面的底部回顾它。
 
 现在我们知道`setState` Hook 做啥，我们的例子应该更有意义：
 ```jsx harmony
@@ -176,7 +177,7 @@ function Example() {
 
 - **line 9**：当用户点击的时候，我们使用一个新的值调用`setCount`。React 将会马上重新渲染`Example`组件，传递新的`count`值给它。 
 
-这看起来需要先做很多工作。别急！如果你在解释中迷失，再次查看前面的代码并尝试从头到脚的阅读它。我们保持保证一旦你尝试去"忘记"类中状态是如何工作的，带着新眼光去审视代码，它将会有意义。
+这看起来需要先做很多工作。别急！如果你在解释中迷失，再次查看前面的代码并尝试从头到脚的阅读它。我们保持保证一旦你带着新眼光去审视代码，尝试去"忘记"类中状态是如何工作的，它将会有意义。
 
 ### 提示：方括弧意味着啥？
 你可能注意到方括弧，当我们声明一个状态变量的时候：

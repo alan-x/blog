@@ -1,3 +1,4 @@
+[原文地址](https://reactjs.org/docs/faq-state.html)
 ### Component State
 
 ### setState 做了什么？
@@ -6,15 +7,15 @@
 
 ### state 和 props 有什么不同？
 
-[props]()（"properties"的简称）和[state]()都是简单 JavaScript 对象。尽管都持有影响渲染输出的信息，他们有一个重要的不同：`props`传递到组件（类似函数参数），`state`在组件内管理（和函数内的变量声明类似）。
+[props](https://reactjs.org/docs/components-and-props.html)（"properties"的简称）和[state](https://reactjs.org/docs/state-and-lifecycle.html)都是简单 JavaScript 对象。尽管都持有影响渲染输出的信息，他们有一个重要的不同：`props`传递到组件（类似函数参数），`state`在组件内管理（和函数内的变量声明类似）。
 
 有些好的资源可以用于在使用`props`和`state`的时候深入阅读：
 
-- [Props vs State]()
+- [Props vs State](https://github.com/uberVU/react-guide/blob/master/props-vs-state.md)
 
-- [ReactJS: Props vs. State]()
+- [ReactJS: Props vs. State](https://lucybain.com/blog/2016/react-state-vs-pros/)
 
-### 为什么 setState给我错误的值？
+### 为什么 setState 给我错误的值？
 
 在 React，`this.props`和`this.state`表示渲染的值，比如，当前屏幕的值。
 
@@ -68,7 +69,7 @@ handleSomething() {
   // But when React re-renders the component, it will be 3.
 }
 ```
-[了解更多关于 setState]()
+[了解更多关于 setState](https://reactjs.org/docs/react-component.html#setstate)
 
 ### setState 什么时候是异步的？
 
@@ -90,11 +91,11 @@ handleSomething() {
 
 - 这将导致我们正在实现的一些新功能无法实现。
 
-这个 [GitHub comment]() 深入指定例子。
+这个 [GitHub comment](https://github.com/facebook/react/issues/11527#issuecomment-360199710) 深入指定例子。
 
 ### 我应该使用一个类似 Redux 或者 MobX 之类的状态管理库？
 
-[可能]()
+[可能](https://redux.js.org/faq/general#when-should-i-use-redux)
 
 在添加额外的库之前，最好先知道 React。只使用 React，你可以构建更复杂的应用。
 

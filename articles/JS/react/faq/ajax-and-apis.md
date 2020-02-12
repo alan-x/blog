@@ -1,12 +1,13 @@
+[原文地址](https://reactjs.org/docs/faq-ajax.html)
 ### Ajax and APIs
 
 ### 如何创建一个 AJAX 调用？
 
-你可以使用任何你喜欢的 AJAX 库和 React 一起用。比较流行的是 [Axios]()，[jQuery AJAX]()，和浏览器内置的 [window.fetch]()。
+你可以使用任何你喜欢的 AJAX 库和 React 一起用。比较流行的是 [Axios](https://github.com/axios/axios)，[jQuery AJAX](https://api.jquery.com/jQuery.ajax/)，和浏览器内置的 [window.fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)。
 
 ### 应该在组件的哪一个生命周期创建 AJAX 调用？
 
-你应该在 [componentDidMount]() 生命周期方法调用 AJAX 填充输入。这是你可以使用`setState`去更新你的组件，当数据获取到的时候。
+你应该在 [componentDidMount](https://reactjs.org/docs/react-component.html#mounting) 生命周期方法调用 AJAX 填充输入。这是你可以使用`setState`去更新你的组件，当数据获取到的时候。
 
 ### 例子：使用 AJAX 结果去设置本地状态
 

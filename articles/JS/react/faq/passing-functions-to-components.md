@@ -1,3 +1,4 @@
+[原文地址](https://reactjs.org/docs/faq-functions.html)
 ### 传递函数到组件
 
 **如何传递一个时间处理器（像 onClick）到一个组件？**
@@ -91,7 +92,7 @@ method();
 
 使用 React，通常你只需要去绑定你传递给其他组件的方法。比如，`<button onClick={this.handleClick} >` 传递的`this.handleClick`，你需要去绑定它。然而，不需要去绑定`render`方法或者生命方法：我们不能传递他们到其他组件。
 
-[Yehuda Katz 的这篇文章]()详细解释了绑定是什么，并且函数在 JavaScript 中是怎样工作的。 
+[Yehuda Katz 的这篇文章](https://yehudakatz.com/2011/08/11/understanding-javascript-function-invocation-and-this/)详细解释了绑定是什么，并且函数在 JavaScript 中是怎样工作的。 
 
 **为什么我的函数在每次组件 render 的时候都被调用？**
 
@@ -198,11 +199,11 @@ class Alphabet extends React.Component {
 
 如果你有一个类似`onClick`或者`onScroll`并且想要防止回调调用太快，则你可以限制执行的回调的频率。这个可以通过使用：
 
-- throttling：样本基于事件频率变化（比如[_.throttle]()）
+- throttling：样本基于事件频率变化（比如[_.throttle](https://lodash.com/docs#throttle)）
 
-- debouncing：在一段不活跃之后发布改变
+- debouncing：在一段不活跃之后发布改变（比如[_.debounce](https://lodash.com/docs#debounce)）
 
-- requestAnimationFrame throttling：样本基于 [requestAnimationFrame]() 变化（比如 [raf-schd]()）
+- requestAnimationFrame throttling：样本基于 [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame) 变化（比如 [raf-schd](https://github.com/alexreardon/raf-schd)）
 
 查看 [这个可视化]() 了解`throttle`和`debounce`函数的比较。
 
@@ -210,7 +211,7 @@ class Alphabet extends React.Component {
 
 ### Throttle
 
-throttling 防止一个行数在给定事件窗口内调用超过一次。下面的例子 throttle 一个"点击"处理器去防止每秒调用超过一次。
+throttling 防止一个函数在给定事件窗口内调用超过一次。下面的例子 throttle 一个"点击"处理器去防止每秒调用超过一次。
 
 ```jsx harmony
 import throttle from 'lodash.throttle';
@@ -237,7 +238,7 @@ class LoadMoreButton extends React.Component {
 ```
 
 ### Debounce
-Debouncing 确保一个函数不会被调用，直到某个时间过去之后，从它上一次调用。当你需要在一个派发快速的事件响应中执行一些昂贵的计算（比如，滚动或者键盘事件）的时候，这很有用。下面的例子使用 250ms 延迟 debounce 文本输入框。
+Debouncing 确保一个函数从它上一次调用，直到某个时间过去之后，不会被调用。当你需要在一个派发快速的事件响应中执行一些昂贵的计算（比如，滚动或者键盘事件）的时候，这很有用。下面的例子使用 250ms 延迟 debounce 文本输入框。
 ```jsx harmony
 import debounce from 'lodash.debounce';
 
@@ -278,9 +279,9 @@ class Searchbox extends React.Component {
 
 ### requestAnimationFrame throttling
 
-[requestAnimationFrame]() 是入队一个函数到浏览器在适当时间被执行的优化渲染性能的方式。使用`requestAnimationFrame`入队的函数将会在下一帧激活。浏览器将会努力确保 60 帧每秒（60fps）。然而，如果浏览器无法做到，将会压缩每秒的帧数。比如，一个设备可能只能处理 30 fps，并且你讲只得到 30 帧每秒。使用`requestAnimationFrame`去节流是一个非常有用的技术，防止你执行超过 60 次更新每秒。如果你执行 100 次更新每秒，这创建额外的工作给浏览器，用户将无法看到任何东西。
+[requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame) 是入队一个函数到浏览器在适当时间被执行的优化渲染性能的方式。使用`requestAnimationFrame`入队的函数将会在下一帧激活。浏览器将会努力确保 60 帧每秒（60fps）。然而，如果浏览器无法做到，将会压缩每秒的帧数。比如，一个设备可能只能处理 30 fps，你将只得到 30 帧每秒。使用`requestAnimationFrame`去节流是一个非常有用的技术，防止你执行超过 60 次更新每秒。如果你执行 100 次更新每秒，这创建额外的工作给浏览器，用户将无法看到任何东西。
 
-注意：使用这个技术将只捕获一帧最后发布的值。你可以在 [MDN]() 上看这个例子是优化是如何工作的。
+注意：使用这个技术将只捕获一帧最后发布的值。你可以在 [MDN](https://developer.mozilla.org/en-US/docs/Web/Events/scroll) 上看这个例子是优化是如何工作的。
 
 ```jsx harmony
 import rafSchedule from 'raf-schd';
@@ -323,7 +324,7 @@ class ScrollListener extends React.Component {
 
 ### 测试你的频率限制
 
-当测试你的频率限制代码工作正常，向前加快时间的能力很有帮助。如果你使用[jest]()则你可以使用[mock timer]()去向前加快时间。如果你使用`requestAnimationFrame`节流，则你可能找到[raf-stub]()是一个控制动画帧非常有用的工具。
+当测试你的频率限制代码工作正常，向前加快时间的能力很有帮助。如果你使用[jest](https://facebook.github.io/jest/)则你可以使用[mock timer](https://facebook.github.io/jest/docs/en/timer-mocks.html)去向前加快时间。如果你使用`requestAnimationFrame`节流，则你可能找到[raf-stub](https://github.com/alexreardon/raf-stub)是一个控制动画帧非常有用的工具。
 
 
 

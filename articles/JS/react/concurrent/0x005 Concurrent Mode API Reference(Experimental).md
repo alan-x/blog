@@ -1,24 +1,14 @@
 ### Adopting Concurrent Mode(Experimental)
 
-
 注意：
 
-这个页面描述了**稳定发布中[还不可用]()的实验性功能**。不要在生产 app 中依赖 React 的试验性构建。在成为 React 的一部分之前，这些功能可能发生非常大的改变，并且没有警告。
+这个页面描述了**稳定发布中[还不可用](https://reactjs.org/docs/concurrent-mode-adoption.html)的实验性功能**。不要在生产应用中依赖 React 的试验性构建。在成为 React 的一部分之前，这些功能可能发生非常大的改变，并且没有警告。
 
 这个文档面向早期接受者和好奇的人。**如果你刚接触 React，不要担心这些功能** -- 你不需要立马学习他们。
 
-这个页面是 React [Concurrent 模式]() 的 API 索引。如果你在需要一个指南，查阅[Concurrent UI 模式]()
+这个页面是 React [Concurrent 模式](https://reactjs.org/docs/concurrent-mode-intro.html) 的 API 索引。如果你在需要一个指南，查阅[Concurrent UI 模式](https://reactjs.org/docs/concurrent-mode-patterns.html)
 
-**注意：这是一个社区预览，不是最终稳定版。这写 API 将会有更多改变。使用风险自负！**
-
-- [Enabling Concurrent Mode]()
-    - [createRoot]()
-    - [createBlockingRoot]()
-- [Suspense]()
-    - [Suspense]()
-    - [SuspenseList]()
-    - [useTransition]()
-    - [useDeferredValue]()
+**注意：这是一个社区预览，不是最终稳定版。这些 API 将会有更多改变。使用风险自负！**
 
 ### 启用 Concurrent 模式
 
@@ -28,13 +18,13 @@ ReactDOM.createRoot(rootNode).render(<App />);
 ```
 替换`ReactDOm.render(<App />, rootNode)`并启用 Concurrent 模式。
 
-了解更多关于 Concurrent 模式，查阅[Concurrent 模式文档]()。
+了解更多关于 Concurrent 模式，查阅[Concurrent 模式文档](https://reactjs.org/docs/concurrent-mode-intro.html)。
 
 #### createBlockingRoot
 ```jsx harmony
 ReactDOM.createBlockingRoot(rootNode).render(<App />)
 ```
-替换`ReactDom.render(<App />, rootNode)`并启用[Blocking 模式]()。
+替换`ReactDom.render(<App />, rootNode)`并启用[Blocking 模式](https://reactjs.org/docs/concurrent-mode-adoption.html#migration-step-blocking-mode)。
 
 选择 Concurrent 模式导致 React 工作原理的语义化改变。这意味着你不能只在部分组件使用 Concurrent 模式。因为这个，有些应用可能无法直接升级到 Concurrent 模式。
 
@@ -97,9 +87,10 @@ const SUSPENSE_CONFIG = { timeoutMs: 2000 };
 const [startTransition, isPending] = useTransition(SUSPENSE_CONFIG);
 ```
 
-`useTransition`允许组件去避免不期待的加载状态，通过等待内容去加载，在**过去到下一个屏幕**之前。它也允许组件去延迟更久，数据获取更新直到子序列渲染，这样更多关键更新可以立即渲染。
+`useTransition`通过等待内容去加载，允许组件去避免不期待的加载状态，在**过渡到下一个屏幕**之前。它也允许组件去延迟更久，数据获取更新直到子序列渲染，这样更多关键更新可以立即渲染。
 
 `useTransition` hook 返回一个包含两个值的数组。
+
 - `startTransition`是一个函数，接收一个回调。我们可以使用它去告诉 React 哪一个状态我们要去延迟。
 
 - `isPending`是一个布尔。是 React 告诉我们我们等待的组件过渡完成的方式。
@@ -137,7 +128,7 @@ function App() {
 
 `isPending`布尔让 React 直到我们的组件在过渡，这样我们可以让用户直到这个，通过显示一些加载文字在上一个 profile 页面。
 
-**了解更多关于过渡的信息，你可以阅读[Concurrent UI 模式]()**。
+**了解更多关于过渡的信息，你可以阅读[Concurrent UI 模式]https://reactjs.org/docs/concurrent-mode-patterns.html#transitions)**。
 
 #### useTransition Config
 ```jsx harmony

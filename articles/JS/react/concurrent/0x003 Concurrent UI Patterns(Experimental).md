@@ -1,48 +1,27 @@
+[原文地址](https://reactjs.org/docs/concurrent-mode-patterns.html)
 ### Concurrent UI Patterns(Experimental)
 
 注意：
 
-这个页面描述了**稳定发布中[还不可用]()的实验性功能**。不要在生产 app 中依赖 React 的试验性构建。在成为 React 的一部分之前，这些功能可能发生非常大的改变，并且没有警告。
+这个页面描述了**稳定发布中[还不可用](https://reactjs.org/docs/concurrent-mode-adoption.html)的实验性功能**。不要在生产 app 中依赖 React 的试验性构建。在成为 React 的一部分之前，这些功能可能发生非常大的改变，并且没有警告。
 
-这个文档面向早期接受者和好奇的人。**如果你刚接触 React，不要单鞋这些功能** -- 你不需要立马学习他们。比如，如果你在寻找现在使用的数据获取指南，阅读[这篇文章]()。
+这个文档面向早期接受者和好奇的人。**如果你刚接触 React，不要担心这些功能** -- 你不需要立马学习他们。比如，如果你在寻找现在使用的数据获取指南，阅读[这篇文章](https://www.robinwieruch.de/react-hooks-fetch-data/)。
 
 通常，当我们更新状态，我们期待立即在屏幕上看到改变。这是有意义的，因为我们想要保持我们的应用响应用户输入。然而，有一些场景，我们可能偏向于**延迟一些更新出现在屏幕**。
 
 比如，如果我们切换一个页面到另一个，下一个屏幕的代码或者数据还没有被加载，立即看到一个带加载指示器的空页面是令人沮丧的。我们可能更偏向于呆在前一个应用更长时间。在历史上，React 实现这个模式很难。Concurrent 模式提供一个新的工具集去做到它。
 
-- [Transitions]()
-    - [Wrapping setState in a Transition]()
-    - [Adding a Pending Indicator]()
-    - [Reviewing the Changes]()
-    - [Where Does the Update Happen?]()
-    - [Transitions Are Everywhere]()
-    - [Baking Transitions Into the Design System]()
-
-- [The Three Steps]()
-    - [Default: Receded → Skeleton → Complete]()
-    - [Preferred: Pending → Skeleton → Complete]()
-    - [Wrap Lazy Features in <Suspense>]()
-    - [Suspense Reveal “Train”]()
-    - [Delaying a Pending Indicator]()
-    - [Recap]()
-    
-- [Other Patterns]()
-    - [Splitting High and Low Priority State]()
-    - [Deferring a Value]()
-    - [SuspenseList]()
-    - [Next Steps]()
-
 ### Transitions
 
-再次访问前一个页面关于[数据获取的 Suspense 的]()[这个 demo]()。
+再次访问前一个页面关于[数据获取的 Suspense 的](https://reactjs.org/docs/concurrent-mode-suspense.html)[这个 demo](https://codesandbox.io/s/infallible-feather-xjtbu)。
 
-当我们点击"Next"按钮去切换活跃的 profile，存在的页面数据立马消失，我们看到再次看到整个页面的加载状态。我们称之为"不期待"的加载状态。**如果我们可以"跳过"它并等待一些内容加载，在过度到新屏幕之前不是很好嘛？**。
+当我们点击"Next"按钮去切换活跃的 profile，存在的页面数据立马消失，我们再次看到整个页面的加载状态。我们称之为"不期待"的加载状态。**如果我们可以"跳过"它并等待一些内容加载，再过渡到新屏幕之前不是很好嘛？**。
 
 React 提供了一个新的内建的`useTransition()`Hook 去帮助做到这个。
 
 我们可以在三个步骤内使用它。
 
-首先，我们确保我们真的使用 Concurrent 模式。我们将在之后讨论更多关于[使用 Concurrent 模式]()，但是现在，我们知道我们需要使用`ReactDom.createRoot()`而不是`ReactDOM.render()`让这个功能可用就够了。
+首先，我们确保我们真的使用 Concurrent 模式。我们将在之后讨论更多关于[使用 Concurrent 模式](https://reactjs.org/docs/concurrent-mode-adoption.html)，但是现在，我们知道我们需要使用`ReactDom.createRoot()`而不是`ReactDOM.render()`让这个功能可用就够了。
 ```jsx harmony
 const rootElement = document.getElementById("root");
 // Opt into Concurrent Mode
@@ -65,13 +44,13 @@ function App() {
 
 - `startTransition`是一个函数。我们将用它告诉 React 哪一个状态更新我们想要去延迟。
 
-- `isPending`是一个布尔值。它是 React 告诉我们过度当前是否正在进行。
+- `isPending`是一个布尔值。它是 React 告诉我们过渡当前是否正在进行。
 
 我们在下面马上就会使用他们。
 
 注意我们传输一个配置对象给`useTransition`。它的`timeoutMS`属性指定**我们愿意等待多长时间去完成过渡**。通过传递`{timeoutMs: 3000}`，我们说"如果下一个 profile 页面需要超过 3 秒加载，显示大 spinner -- 但是正在超时之前，保持显示前一个屏幕是没问题的"。
 
-在一个过渡中包裹 setState
+### 在一个过渡中包裹 setState
 
 我们的"Next"按钮点击处理器设置状态切换当前 profile：
 ```jsx harmony
@@ -93,15 +72,15 @@ function App() {
   }}
 >
 ``` 
-[在 CodeSandbox 尝试]()
+[在 CodeSandbox 尝试](https://codesandbox.io/s/musing-driscoll-6nkie)
 
 点击"Next"一些时间。注意他已经感觉非常不同。**点击的时候不是立即看到一个空的屏幕，我们现在保持前一个屏幕在一段时间内可见**。当数据被加载，React 让我们过渡到新的屏幕。
 
-如果我们让我们的 API 响应超过 5 秒，[我们可以确认]()现在 React"放弃"并且无论如何，3 秒后过渡到下一个屏幕。这是因为我们传输`{timeout: 3000}`给`useTransition()`。比如，如果我们传递`{timeout: 6000}`替代，它将会等待整整 1 分钟。
+如果我们让我们的 API 响应超过 5 秒，[我们可以确认](https://codesandbox.io/s/relaxed-greider-suewh)现在 React"放弃"并且无论如何，3 秒后过渡到下一个屏幕。这是因为我们传输`{timeout: 3000}`给`useTransition()`。比如，如果我们传递`{timeout: 6000}`替代，它将会等待整整 1 分钟。
 
-添加 Pending 指示器
+### 添加 Pending 指示器
 
-关于[我们最后的例子]()依旧有一些东西让人感觉断开。的确，看不到"坏的"加载状态很好。**但是看不到完全进度指示感觉更糟糕**！当我们点击"Next"，什么都没有发生让它感觉应用坏了。
+关于[我们最后的例子](https://codesandbox.io/s/musing-driscoll-6nkie)依旧有一些东西让人感觉断开。的确，看不到"坏的"加载状态很好。**但是看不到完全进度指示感觉更糟糕**！当我们点击"Next"，什么都没有发生让它感觉应用坏了。
 
 我们`useTransition()`调用返回两个值：`startTransition`和`isPending`。
 
@@ -109,7 +88,7 @@ function App() {
   const [startTransition, isPending] = useTransition({ timeoutMs: 3000 });
 ```
 
-我们已经使用`startTransition`去包裹状态更新。现在我们将使用`isPending`。React 给这个布尔给我们，这样我们可以告诉是否**我们当前等待过渡完成**。我们将使用它只是一些东西发生了：
+我们已经使用`startTransition`去包裹状态更新。现在我们将使用`isPending`。React 给这个布尔给我们，这样我们可以告诉是否**我们当前等待过渡完成**。我们将使用它指示一些东西发生了：
 ```jsx harmony
 return (
   <>
@@ -129,13 +108,13 @@ return (
   </>
 );
 ```
-[在 CodeSandbox 尝试它]()
+[在 CodeSandbox 尝试它](https://codesandbox.io/s/jovial-lalande-26yep)
 
-现在，这感觉好多了！但我们点击下一步，它被禁用，因为多次点击没有意义。并且新的"Loading..."告诉用户应用没有冻结。
+现在，这感觉好多了！当我们点击下一步，它被禁用，因为多次点击没有意义。并且新的"Loading..."告诉用户应用没有冻结。
 
 ### 回顾改变
 
-让我们看看我们从[原始例子]()开始采取的所有改变：
+让我们看看我们从[原始例子](https://codesandbox.io/s/infallible-feather-xjtbu)开始采取的所有改变：
 ```jsx harmony
 function App() {
   const [resource, setResource] = useState(initialResource);
@@ -161,7 +140,7 @@ function App() {
   );
 }
 ```
-[在 CodeSandbox 尝试]()
+[在 CodeSandbox 尝试](https://codesandbox.io/s/jovial-lalande-26yep)
 
 添加这个过渡只需要添加七行代码：
 
@@ -183,19 +162,18 @@ function App() {
 
 **但是相同组件的同一个版本如何同时存在？**
 
-这涉及到 Concurrent 模式的根本。[前面说]()有点像 React 在"分支"上更新状态。另一方面，我们可以认为包含在`startTransition`的状态更新"在另一个不同的宇宙"渲染，很像科幻电影。我们不会直接"看到"宇宙 -- 但是我们可以从它那里得到一个信号，告诉我们有些事情发生了（`isPending`）。当更新准备好了，我们的"宇宙"合并回去，然后我们在屏幕上看到结果。
+这涉及到 Concurrent 模式的根本。[前面说](https://reactjs.org/docs/concurrent-mode-intro.html#intentional-loading-sequences)有点像 React 在"分支"上更新状态。另一方面，我们可以认为包含在`startTransition`的状态更新"在另一个不同的宇宙"渲染，很像科幻电影。我们不会直接"看到"宇宙 -- 但是我们可以从它那里得到一个信号，告诉我们有些事情发生了（`isPending`）。当更新准备好了，我们的"宇宙"合并回去，然后我们在屏幕上看到结果。
 
-多玩一会[demo]()，尝试去想象所发生的。
+多玩一会[demo](https://codesandbox.io/s/jovial-lalande-26yep)，尝试去想象所发生的。
 
-当然，两个版本的树在同一时间渲染是假象，就像你的电脑上所有的程序同时运行也是一个假象。一个操作系统在不同应用之间切换非常快。同样的，React 可以在不同版本的树之前切换，你在屏幕上看到的和它"准备"下一次显示的。
+当然，两个版本的树在同一时间渲染是假象，就像你的电脑上所有的程序同时运行也是一个假象。一个操作系统在不同应用之间切换非常快。同样的，React 可以在不同版本的树之间切换，你在屏幕上看到的和它"准备"下一次显示的。
 
 像`useTranstion`之类的 API 让你聚焦于期望的用户体验，不用去思考这机制是怎样实现的。依旧，想象包裹在`startTransition`的更新发生在"一个分支"或者"在另一个宇宙"的概念依旧很有帮助。
 
-
 ### 过渡在任何地方
-正如我们在[Suspense 演练]()学习到的，任何组件可以在任何时候"挂起"，如果一些需要的数据还没准备好。我们可以直接防止`<Suspense>`边界在树的不同地方去处理这个，但是并不一定足够。
+正如我们在[Suspense 演练](https://reactjs.org/docs/concurrent-mode-suspense.html)学习到的，任何组件可以在任何时候"挂起"，如果一些需要的数据还没准备好。我们可以直接防止`<Suspense>`边界在树的不同地方去处理这个，但是并不一定足够。
 
-让我们回到[第一个 Suspense 例子]()，只有一个 profile 的那个。同时，它只获取一次数据。我们将添加一个"Refresh"按钮去检查服务端更新。
+让我们回到[第一个 Suspense 例子](https://codesandbox.io/s/frosty-hermann-bztrp)，只有一个 profile 的那个。同时，它只获取一次数据。我们将添加一个"Refresh"按钮去检查服务端更新。
 
 我们的第一次尝试看起来像这样：
 ```jsx harmony
@@ -221,11 +199,11 @@ function ProfilePage() {
   );
 }
 ```
-[在 CodeSandbox 尝试它]()
+[在 CodeSandbox 尝试它](https://codesandbox.io/s/boring-shadow-100tf)
 
 在这个例子中，我们在加载和每一次点击"Refresh"的时候调用数据获取。我们将`fetchUserAndPosts()`的调用结果防止到状态中，这样后面的组件可以从我们发起的请求中读取获取到的数据。
 
-我们可以在[这个例子]()看到点击"Refresh"是如何工作的。`<ProfileDetails>`和`<ProfileTimeline>`组件接收一个新的`resource`属性，比哦啊是刷新的数据，他们"挂起"是因为我们还没有一个响应，我们看到 fallback。当响应加载，我们可以看到更新的文章（我们伪装的 API 每 3 s 添加一次）。
+我们可以在[这个例子](https://codesandbox.io/s/boring-shadow-100tf)看到点击"Refresh"是如何工作的。`<ProfileDetails>`和`<ProfileTimeline>`组件接收一个新的`resource`属性，表示刷新的数据，他们"挂起"是因为我们还没有一个响应，我们看到 fallback。当响应加载，我们可以看到更新的文章（我们伪装的 API 每 3 s 添加一次）。
 
 然而，体验非常糟糕。我们浏览一个页面，但是它我们和它交互的时候立即被一个加载状态替代。这很混乱。**就像之前，为了避免显示一个不期待的加载状态，我们可以包裹装载更新在一个过渡中：**
 ```jsx harmony
@@ -258,13 +236,13 @@ function ProfilePage() {
   );
 }
 ```
-[在 CodeSandbox 中尝试]()
+[在 CodeSandbox 中尝试](https://codesandbox.io/s/sleepy-field-mohzb)
 
 这个感觉好一点！点击"Refresh"没有让我们脱离我们浏览的页面。我们看到一些加载"内联"，当数据准备好，它就会显示。
 
 ### 将过渡融合到设计系统
 
-我们现在可以看到`useTransition`的需要非常常见。大量的按钮点击或者急哦啊户会导致组件挂起，需要包裹在`useTranstion`去避免意外隐藏用户正在交互的元素。
+我们现在可以看到`useTransition`的需要非常常见。大量的按钮点击或者交互会导致组件挂起，需要包裹在`useTranstion`去避免意外隐藏用户正在交互的元素。
 
 这会导致组件间大量的重复代码。这是为什么**我们通常推荐将 useTransition 融合到你的应用的设计系统组件**。比如，我们可以抽取逻辑到我们的`<Button>`组件：
 ```jsx harmony
@@ -296,9 +274,9 @@ function Button({ children, onClick }) {
   );
 }
 ```
-[在 CodeSandbox 中尝试]
+[在 CodeSandbox 中尝试](https://codesandbox.io/s/modest-ritchie-iufrh)
 
-注意按钮不关心我们在更新什么状态。它包裹任何发生在`onClick`处理器苏哟呦的状态更新到一个过渡。注意我们`<Button>`关注过渡的设置，`<ProfilePage>`组件不需要设置自己的：
+注意按钮不关心我们在更新什么状态。它包裹任何发生在`onClick`处理器的状态更新到一个过渡。注意我们`<Button>`关注过渡的设置，`<ProfilePage>`组件不需要设置自己的：
 ```jsx harmony
 function ProfilePage() {
   const [resource, setResource] = useState(initialResource);
@@ -320,11 +298,11 @@ function ProfilePage() {
   );
 }
 ```
-[在 CodeSandbox 中尝试]()
+[在 CodeSandbox 中尝试](https://codesandbox.io/s/modest-ritchie-iufrh)
 
 当按钮被点击的时候，它开始一个过渡，并在它的内部调用`props.onClick()` -- 它触发`<ProfilePage>`组件中的`handleRefreshClick`。我们开始获取新鲜数据，但是它不触发一个 fallback 因为我们在一个过渡内部，在`useTransition`内部指定的 10 秒超时还没过去之前。当过渡是 pending，按钮显示一个内联加载指示器。
 
-我们可以看到 Concurrent 模式如何帮助我们叨叨一个好的用户体验而不损失组件的独立性和模块化。React 和过渡协调。
+我们可以看到 Concurrent 模式如何帮助我们达到一个好的用户体验而不损失组件的独立性和模块化。React 和过渡协调。
 
 ### 三步走
 
@@ -333,13 +311,13 @@ function ProfilePage() {
 
 在最后，我们有"Complete"状态。这才是我们真正想要的。它表示下一个屏幕完全渲染，并且不再加载更多数据。
 
-但是在 Complete 之前，我们可以需要去加载一些数据或者代码。当我们在下一个屏幕，但是它的其中一部分还在加载，我们调用一个 Skeleton 状态。
+但是在 Complete 之前，我们可能需要去加载一些数据或者代码。当我们在下一个屏幕，但是它的其中一部分还在加载，我们调用一个 Skeleton 状态。
 
 最后，有两个主要方式让我们到 Skeleton 状态。我们将使用具体例子描述他们之前的不同。
 
 ### 默认：Receded -> Skeleton -> Complete
 
-打开[这个例子]()并点击"Open Profile"。你将一个一个看到虚拟状态：
+打开[这个例子](https://codesandbox.io/s/prod-grass-g1lh5)并点击"Open Profile"。你将一个一个看到虚拟状态：
 
 - Receded： 一会儿，你将会看到`<h1>Loading the app ...</h1>`fallback。
 
@@ -420,17 +398,17 @@ function ProfilePage() {
 ### Preferred: Pending -> Skeleton -> Complete
 当我们`useTransition`，React 将会让我们"呆在"前一个屏幕 -- 并且显示一个进度指示器。我们叫做 Pending 状态。它感觉比 Receded 状态更好，因为没有一个已存在的内容丢失，并且页面依旧可以交互。
 
-- Default: Receded -> Skeleton -> Complete
+- Default: [Receded -> Skeleton -> Complete](https://codesandbox.io/s/prod-grass-g1lh5)
 
-- Preferred: Pending -> Skeleton -> Complete
+- Preferred: [Pending -> Skeleton -> Complete](https://codesandbox.io/s/focused-snow-xbkvl)
 
 两个例子的不同在于第一个使用常规的`<button>`，但是第二个使用我们自定义的带`useTransition`的`<Button>`组件。
 
 ### 在 <Suspense> 包裹 Lazy 功能
 
-打开[这个例子]()。当你点击按钮，你将看到 Pending 状态，在你继续之前。这个过渡感觉非常好和新鲜。
+打开[这个例子](https://codesandbox.io/s/nameless-butterfly-fkw5q)。当你点击按钮，你将看到 Pending 状态，在你继续之前。这个过渡感觉非常好和新鲜。
 
-我们现在将添加一个新功能到 profile 页面 -- 关于个人的新区列表：
+我们现在将添加一个新功能到 profile 页面 -- 关于个人的兴趣列表：
 ```jsx harmony
 function ProfilePage({ resource }) {
   return (
@@ -458,11 +436,11 @@ function ProfileTrivia({ resource }) {
   );
 }
 ```
-[在 CodeSandbox 尝试]()
+[在 CodeSandbox 尝试](https://codesandbox.io/s/focused-mountain-uhkzg)
 
 如果你现在点击"Open Profile"，你可以告诉一些东西是错误的。它需要七秒去过渡！这是因为我们的 trivia API 太慢了。加入我们无法让 API 更快。我们如何在这个约束下提高用户体验？
 
-如果我们不想要呆在 Pending 状态太久，我们第一个本能是在`useTransition`设置一个更小的`timeoutMS`，比如`3000`。你可以在[这里]()尝试。这然我们逃离太长的 Pending 状态，但是我们依旧有任何有效的去显示！
+如果我们不想要呆在 Pending 状态太久，我们第一个本能是在`useTransition`设置一个更小的`timeoutMS`，比如`3000`。你可以在[这里](https://codesandbox.io/s/practical-kowalevski-kpjg4)尝试。这然我们逃离太长的 Pending 状态，但是我们依旧有任何有效的去显示！
 
 有一个简单的方式去解决这个。**与其让过渡更短，我们可以在过渡中"不连接"慢的组件**通过包含它到`<Suspense>`。
 ```jsx harmony
@@ -480,17 +458,17 @@ function ProfilePage({ resource }) {
   );
 }
 ```
-[在 CodeSandbox 尝试]()
+[在 CodeSandbox 尝试](https://codesandbox.io/s/condescending-shape-s6694)
 
-这透露了一个重要的简介。React 总是偏向于尽可能尽快的到达 Skeleton 状态。就算我们使用带长时间的过渡，React 将不呆在 Pending 状态太长。去避免 Receded 状态。
+这透露了一个重要的见解。React 总是偏向于尽可能尽快的到达 Skeleton 状态。就算我们使用带长时间的过渡，React 将不呆在 Pending 状态太长。去避免 Receded 状态。
 
-**如果一些功能不是下一个屏幕重要的一部分，包裹它到 <Suspense> 并让他惰性初始化。这强制我们尽可能快的显示剩下的内容。反过来，如果一个屏幕不值得显示一些组件，比如`<ProfileDetails>`的例子，不要包裹在`<Suspense>`。然后过渡将会"等待"它到准备好。
+**如果一些功能不是下一个屏幕重要的一部分，包裹它到 <Suspense> 并让他惰性初始化**。这强制我们尽可能快的显示剩下的内容。反过来，如果一个屏幕不值得显示一些组件，比如`<ProfileDetails>`的例子，不要包裹在`<Suspense>`。然后过渡将会"等待"它到准备好。
 
 ### Suspense Reveal "Train"
 
 当我们已经在下一个屏幕，有时候数据被需要去成功快速"解锁"不同`<Suspense>`边界。比如，两个不同响应可能在 1000 毫秒和 1050 毫秒后各自到达。如果你已经等到 1 秒，等待另一个 50 毫秒是不可擦觉的。这也是为什么 React 使用一个调度展示`<Suspense>`边界，就像一个"火车"按序到达。这需要一点延迟，用来减少布局抖动和可视化改变的数量。
 
-你可以[在这里]()看到这个例子。"文章"和"兴趣"响应在 100 毫秒内返回。但是 React 合并他们并"展示"他们的 Suspense 边界。
+你可以[在这里](https://codesandbox.io/s/admiring-mendeleev-y54mk)看到这个例子。"文章"和"兴趣"响应在 100 毫秒内返回。但是 React 合并他们并"展示"他们的 Suspense 边界。
 
 ### Delay a Pending Indicator
 我们的`Button`组件在点击的时候将立即显示 Pending 状态指示器：
@@ -512,7 +490,7 @@ function Button({ children, onClick }) {
   );
 }
 ```
-[在 CodeSandbox 尝试它]()
+[在 CodeSandbox 尝试它](https://codesandbox.io/s/floral-thunder-iy826)
 
 这指示用户有些东西发生了。然而，如果过渡相当短（少于 500 毫秒），这可能太迷惑人并且让过渡感觉更慢。
 
@@ -545,10 +523,9 @@ return (
 );
 
 ```
-[在 CodeSandbox 中尝试它]()
+[在 CodeSandbox 中尝试它](https://codesandbox.io/s/gallant-spence-l6wbk)
 
 使用这个改变，就算我们在 Pending 状态，我们不显示任何指示器给用户，知道 500 毫秒过去。这可能看起来不是一个提高，当 API 响应慢的时候。但是在 API 调用快的时候对比之前和之后的感觉。尽管剩下的代码没有改变，压制一个"太快的"加载状态提高感知性能，通过不调用注意到延迟。
-
 
 ### 回顾
 
@@ -562,7 +539,6 @@ return (
 - 如果我们不想要一些组件去延迟过渡，我们可以将它包裹到它自己的`<Suspense>`边。
 
 - 与其在每个组件使用`useTransition`，我们可以构建他到我们设计系统。
-
 
 ### 其他模式
 过渡可能是你遇到过最普通的 Concurrent 模式，但是还有一些模式你会发现很有用。
@@ -606,9 +582,9 @@ function Translation({ resource }) {
   );
 }
 ```
-[在 CodeSandbox 中尝试]()
+[在 CodeSandbox 中尝试](https://codesandbox.io/s/brave-villani-ypxvf)
 
-注意当我们输入的时候，`<Translation>`，`<Translation>`组件是怎么挂起的，我们看到`<p>Loading...</p>` fallback，知道我们得到新鲜的结果。这不理想。当我们获取下一个的时候，如果我们可以看到前一个翻译就会更好。
+注意当我们输入的时候，`<Translation>`，`<Translation>`组件是怎么挂起的，我们看到`<p>Loading...</p>` fallback，直到我们得到新鲜的结果。这不理想。当我们获取下一个的时候，如果我们可以看到前一个翻译多一会就会更好。
 
 实际上，如果我们打开控制台，我们将看到一个警告：
 ```jsx harmony
@@ -620,7 +596,7 @@ Refer to the documentation for useTransition to learn how to implement this patt
 ```
 
 
-前面我们提到，如果一些状态更新导致组件挂起，状态更新应高包裹到一个过渡。添加`useTransition`到我们的组件:
+前面我们提到，如果一些状态更新导致组件挂起，状态更新应该包裹到一个过渡。添加`useTransition`到我们的组件:
 ```jsx harmony
 function App() {
   const [query, setQuery] = useState(initialQuery);
@@ -641,7 +617,7 @@ function App() {
 
 }
 ```
-[在 CodeSandbox 试试]()
+[在 CodeSandbox 试试](https://codesandbox.io/s/zen-keldysh-rifos)
 
 现在尝试输入。有些问题！输入更新的非常慢。我们已经修复了第一个问题（在一个过渡外边挂起）。但是现在因为过渡，我们的状态没有立即更新，它不能"驱动"一个受控的输入框。
 
@@ -665,13 +641,13 @@ function handleChange(e) {
 }
 ```
 
-[在 CodeSandbox 中尝试]()
+[在 CodeSandbox 中尝试](https://codesandbox.io/s/lively-smoke-fdf93)
 
 使用这个改变，它如期工作。我们可以立即输入到输入框，并且翻译稍后"跟上"我们输入的。
 
 ### 延迟一个值
 
-默认，React 总是渲染一个持续的 UI。假设代码如下：
+默认，React 总是渲染一个一致性的 UI。假设代码如下：
 ```jsx harmony
 <>
   <ProfileDetails user={user} />
@@ -679,7 +655,7 @@ function handleChange(e) {
 </>
 ```
 
-React 保证任何时候我们在屏幕上看到的组件，他们将反映相同`user`的数据。如果一个不同的`user`因为一个更新传输下来，你应该可以看到他们一起改变。你不能记录一个屏幕并找出一个显示不同`user`的值的帧。（如果你执行这个例子，提一个 bug！）
+React 保证任何时候我们在屏幕上看到的组件，他们将反映相同`user`的数据。如果一个不同的`user`因为一个更新传输下来，你应该可以看到他们一起改变。你不能记录一个屏幕并找出一个显示不同`user`的值的帧。（如果你曾遇到过这样的例子，提一个 bug！）
 
 这在大部分场景下都有意义。不一致的 UI 是令人困惑的，并且会错误引导用户。（比如，它将会很糟糕，如果一个 messenger 的 Send 按钮和会话选择器面板"不同意"当前选择的线程）
 
@@ -693,9 +669,9 @@ const deferredValue = useDeferredValue(value, {
 });
 ```
 
-为了演示这个功能，我们将使用[profile 切换例子]()。点击"Next"按钮并注意它如何使用 1 秒去完成一个过渡。
+为了演示这个功能，我们将使用[profile 切换例子](https://codesandbox.io/s/musing-ramanujan-bgw2o)。点击"Next"按钮并注意它如何使用 1 秒去完成一个过渡。
 
-假设获取用户详情非常快，只话费 300 毫秒。现在，我们等待整整一秒因为我们需要用户详情和文章去显示一个连续的 profile 页面。但是如果我们希望更快的显示详情呢？
+假设获取用户详情非常快，只花费 300 毫秒。现在，我们等待整整一秒因为我们需要用户详情和文章去显示一个连续的 profile 页面。但是如果我们希望更快的显示详情呢？
 
 如果我们想要去贡献一致性，我们可以**传递潜在不新鲜数据给组件，延迟他们的过渡**。这就是`useDeferedValue()`让我们做的：
 ```jsx harmony
@@ -727,7 +703,7 @@ function ProfileTimeline({ isStale, resource }) {
   );
 }
 ```
-[在 CodeSandbox 尝试]()
+[在 CodeSandbox 尝试](https://codesandbox.io/s/vigorous-keller-3ed2b)
 
 这里我们做的交易是`<ProfileTimeline>`将会和其他组件不一致，并且显示一个旧的项目。点击"Next"一点时间以后，你将会注意到。但是感谢它，我们能将延迟过渡时间从 1000 毫秒到 300 毫秒。
 
@@ -757,7 +733,7 @@ function App() {
 }
 ```
 
-[在 CodeSandbox 中尝试]()
+[在 CodeSandbox 中尝试](https://codesandbox.io/s/pensive-shirley-wkp46)
 
 在这个例子，**<MySlowList>中的每一项都有一个人工延迟 -- 每一个延迟线程一些时间**。我们不会在真实的应用这么做，但是这帮助我们模拟没有可以优化的组件树中发生了什么。
 
@@ -785,14 +761,14 @@ function App() {
   );
 }
 ```
-[在 CodeSandbox 中尝试]()
+[在 CodeSandbox 中尝试](https://codesandbox.io/s/infallible-dewdney-9fkv9)
 
 现在卡顿少了很多 -- 尽管我们通过使用一个延迟显示一个结果。
 
-这和节流有啥区别？我们的例子有一个固定的人工延迟（80 项每一项都有 3 毫秒），因此总是有一个延迟，不管我们的计算机有多快。然而，`useDefferrdValue`值只在渲染一段时间后"延迟"。How is this different from debouncing? Our example has a fixed artificial delay (3ms for every one of 80 items), so there is always a delay, no matter how fast our computer is. However, the useDeferredValue value only “lags behind” if the rendering takes a while. There is no minimal lag imposed by React. With a more realistic workload, you can expect the lag to adjust to the user’s device. On fast machines, the lag would be smaller or non-existent, and on slow machines, it would be more noticeable. In both cases, the app would remain responsive. That’s the advantage of this mechanism over debouncing or throttling, which always impose a minimal delay and can’t avoid blocking the thread while rendering.
-                                                                                                   
-                                                                                                   Even though there is an improvement in responsiveness, this example isn’t as compelling yet because Concurrent Mode is missing some crucial optimizations for this use case. Still, it is interesting to see that features like useDeferredValue (or useTransition) are useful regardless of whether we’re waiting for network or for computational work to finish.
-                                                                                                   
+这和节流有啥区别？我们的例子有一个固定的人工延迟（80 项每一项都有 3 毫秒），因此总是有一个延迟，不管我们的计算机有多快。然而，`useDefferrdValue`值只在渲染一段时间后"延迟"。对于 React 没有最小的延迟。使用更实际的工作负载，你可以认为延迟是根据设备调整的。在快的机器，延迟会更小或者不存在，在慢的机器，它更容易被注意。在两场场景中，应用将保持响应。这是这个机制相对于防抖和节流的优势，他们总是有最小的延迟，无法在渲染的时候避免堵塞线程。
+
+尽管在响应性方面还可以提高，这个例子没有很好的展示，因为 Concurrent Mode 对于这个场景缺少一些关键的优化。它依旧显示了像`useDeferredValue`(或者`useTransition`)之类的特性，他们很有用，无论我们等待网络或者计算工作完成。
+
 这里的问题是现在我们总是等待他们全部被获取，如果文章先返回，没有理由延迟显示他们。当兴趣后面加载的时候，他们不会改变布局，因为他们已经在文章后面
 
 
@@ -816,11 +792,11 @@ function ProfilePage({ resource }) {
 }
 ```
 
-[在 CodeSandbox 尝试它]()
+[在 CodeSandbox 尝试它](https://codesandbox.io/s/proud-tree-exg5t)
 
 在这个例子调用的 API 是随机的。如果你保持刷新它，你将注意到有时候文章先到，有时候"兴趣"先到。
 
-这存在一个问题。如果兴趣的响应先到，我们将在文章的 fallback `<h2>Loading post...</h2>`看到兴趣。我们可能开始阅读他们，但是文章的响应将会 回来，并且将所有的因子推后。这很糟糕。
+这存在一个问题。如果兴趣的响应先到，我们将在文章的 fallback `<h2>Loading post...</h2>`看到兴趣。我们可能开始阅读他们，但是文章的响应将会 回来，并且将所有的兴趣推后。这很糟糕。
 
 修复它的一种放回事将他们都放在一个的边界：
 ```jsx harmony
@@ -829,11 +805,11 @@ function ProfilePage({ resource }) {
   <ProfileTrivia resource={resource} />
 </Suspense>
 ```
-[在 CodeSandbox 尝试它]()
+[在 CodeSandbox 尝试它](https://codesandbox.io/s/currying-violet-5jsiy)
 
-这里的问题是我们总是等来他们全部被获取，如果文章先回来，没有理由去显示他们。当 fun fact 后加载，他们不会下推布局，因为他们总是在 post 之后。
+这里的问题是我们总是等来他们全部被获取，如果文章先回来，没有理由去显示他们。当兴趣后加载，他们不会下推布局，因为他们总是在文章之后。
 
-其他解决方式，比如以特定方式组合 Promise，增加获取的复杂度，当加载状态在树的不同组件。
+其他解决方式，比如以特定方式组合 Promise，当加载状态在树的不同组件，增加获取的复杂度。
 
 为了解决这个问题，我们引入`SuspenseList`：
 ```jsx harmony
@@ -856,11 +832,11 @@ function ProfilePage({ resource }) {
   );
 }
 ```
-[在 CodeSandbox 尝试它]()
+[在 CodeSandbox 尝试它](https://codesandbox.io/s/black-wind-byilt)
 
 `revealOrder="forwards"`选项意味着最近的`<Suspense>`节点内部**将只"展示"他们的内容，以出现在树的顺序 -- 就算他们的数据以不同的顺序到达**。`<SuspenseList>`有其他有趣的模式：尝试改变`"forwards"`到`"backforwards"`或者`"together"`，并查看发生了啥。
 
-使用`tail`属性，你可以控制多少加载状态同时可见。如果我们指定`tail="collapsed"`，我们最多同时可以看见一个 fallback。你可以在[这里]()试试。
+使用`tail`属性，你可以控制多少加载状态同时可见。如果我们指定`tail="collapsed"`，我们最多同时可以看见一个 fallback。你可以在[这里](https://codesandbox.io/s/adoring-almeida-1zzjh)试试。
 
 记住`<SuspenseList>`是可以组合的，和 React 中的任何东西。比如，你可以创建一个网格，通过防止多行`<SuspenseList>`在一个`<SuspenseList>`表格内。
 
@@ -868,7 +844,7 @@ function ProfilePage({ resource }) {
 
 Concurrent 模式提供一个强大的 UI 变成模型和一系列可组合的原语去帮助你去编排愉快的用户体验。
 
-这是多年开发和调研的结果，但是这还没完。在[使用 Concurrent 模式]()，我们将描述你如何尝试和你可以期待什么。
+这是多年开发和调研的结果，但是这还没完。在[使用 Concurrent 模式](https://reactjs.org/docs/concurrent-mode-adoption.html)，我们将描述你如何尝试和你可以期待什么。
 
 
 

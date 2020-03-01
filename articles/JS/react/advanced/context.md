@@ -5,25 +5,9 @@ Context 提供了一个跨越组件树传输数据的方式，不需要在每一
 
 在一个典型的 React 应用，数据通过属性从顶部到底部传输，但是这对于某些类型的属性很沉重（比如，本地化偏好，UI 主体），在一个应用内被很多组件需要的。Context 提供在组件间分享值的方式，不需要明确在树的每一级传输属性。
 
-- [什么时候使用 Context]()
-- [在你使用 Context 之前]()
-- [API]()
-    - [React.createContext]()
-    - [Context.Provider]()
-    - [Class.contextType]()
-    - [Class.Consumer]()
-    - [Class.displayName]()
-- [例子]()
-    - [动态 Context]()
-    - [从嵌套组件更新 Context]()
-    - [消费多个 Context]()
-- [警告]()
-- [遗留 API]()
-
-
 ### 什么时候使用 Context
 
-Context 设计用于分享数据，对于 React 组件树可以认为是"全局"，比如当前认证的用户，主体，或者偏好语言。比如，下面的代码中，我们手动传输一个"theme"属性为了装饰 Button 组件：
+Context 设计用于分享数据，对于 React 组件树可以认为是"全局"，比如当前认证的用户，主题，或者偏好语言。比如，下面的代码中，我们手动传输一个"theme"属性为了装饰 Button 组件：
 ```jsx harmony
 class App extends React.Component {
   render() {
